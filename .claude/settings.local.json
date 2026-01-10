@@ -13,7 +13,8 @@
       "Bash(npm uninstall:*)",
       "Bash(npm run build:*)",
       "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Skill(frontend-design)"
     ]
   }
 }

@@ -49,4 +49,7 @@ model SavedItem {
 
   @@index([userId, relevanceScore])
   @@index([userId, savedAt])
+  @@index([userId, readAt])
+  @@index([userId, archivedAt])
+  @@index([userId, estimatedTime])
 }

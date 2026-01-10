@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { SaveArticleForm } from "@/components/dashboard/save-article-form";
 import { SavedItemsList } from "@/components/dashboard/saved-items-list";
 import { EmptyState } from "@/components/dashboard/empty-state";
+import { FilterTabs } from "@/components/dashboard/filter-tabs";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import Link from "next/link";
@@ -13,7 +14,13 @@ export const metadata = {
   description: "Your AI-powered reading queue",
 };
 
-export default async function DashboardPage() {
+interface DashboardPageProps {
+  searchParams: Promise<{ filter?: string }>;
+}
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  const params = await searchParams;
+  const filter = params.filter || 'all';
   const { userId } = await auth();
 
   if (!userId) {
@@ -23,15 +30,6 @@ export default async function DashboardPage() {
   // Find or create user in database
   let user = await db.user.findUnique({
     where: { clerkId: userId },
-    include: {
-      savedItems: {
-        orderBy: [
-          { relevanceScore: "desc" }, // Sort by relevance first
-          { savedAt: "desc" }, // Then by recency
-        ],
-        take: 50, // Limit to 50 most recent items
-      },
-    },
   });
 
   // Create user if not found (handles webhook race condition)
@@ -51,9 +49,6 @@ export default async function DashboardPage() {
           goals: "",
           readingSpeed: 250,
         },
-        include: {
-          savedItems: true,
-        },
       });
     } catch (error: any) {
       // User was created by webhook between our check and create attempt
@@ -61,15 +56,6 @@ export default async function DashboardPage() {
       if (error.code === 'P2002') {
         user = await db.user.findUnique({
           where: { clerkId: userId },
-          include: {
-            savedItems: {
-              orderBy: [
-                { relevanceScore: 'desc' },
-                { savedAt: 'desc' },
-              ],
-              take: 50,
-            },
-          },
         });
       } else {
         throw error;
@@ -82,6 +68,37 @@ export default async function DashboardPage() {
     redirect('/sign-in');
   }
 
+  // Build where clause based on filter
+  const baseWhere = { userId: user.id };
+  const whereClause = {
+    ...baseWhere,
+    ...(filter === 'unread' && { readAt: null, archivedAt: null }),
+    ...(filter === 'read' && { readAt: { not: null }, archivedAt: null }),
+    ...(filter === 'archived' && { archivedAt: { not: null } }),
+    ...(filter === 'quick-read' && { estimatedTime: { lt: 5 }, archivedAt: null }),
+    // 'all' filter = no additional filters beyond userId
+  };
+
+  // Fetch filtered items
+  const savedItems = await db.savedItem.findMany({
+    where: whereClause,
+    orderBy: [
+      { relevanceScore: 'desc' },
+      { savedAt: 'desc' },
+    ],
+    take: 50,
+  });
+
+  // Calculate counts for all filters (parallel queries for performance)
+  const [allCount, unreadCount, readCount, archivedCount, quickReadCount] =
+    await Promise.all([
+      db.savedItem.count({ where: baseWhere }),
+      db.savedItem.count({ where: { ...baseWhere, readAt: null, archivedAt: null } }),
+      db.savedItem.count({ where: { ...baseWhere, readAt: { not: null }, archivedAt: null } }),
+      db.savedItem.count({ where: { ...baseWhere, archivedAt: { not: null } } }),
+      db.savedItem.count({ where: { ...baseWhere, estimatedTime: { lt: 5 }, archivedAt: null } }),
+    ]);
+
   return (
     <div className="min-h-screen bg-zinc-50 p-8 dark:bg-zinc-950">
       <div className="mx-auto max-w-6xl">
@@ -93,10 +110,8 @@ export default async function DashboardPage() {
             </h1>
             <p className="text-zinc-600 dark:text-zinc-400">
               Your reading queue
-              {user.savedItems.length > 0 &&
-                ` • ${user.savedItems.length} article${
-                  user.savedItems.length !== 1 ? "s" : ""
-                } saved`}
+              {allCount > 0 &&
+                ` • ${allCount} article${allCount !== 1 ? "s" : ""} saved`}
             </p>
           </div>
           <Button variant="outline" size="sm" asChild>
@@ -115,9 +130,22 @@ export default async function DashboardPage() {
           <SaveArticleForm />
         </div>
 
+        {/* Filter Tabs */}
+        {allCount > 0 && (
+          <FilterTabs
+            counts={{
+              all: allCount,
+              unread: unreadCount,
+              read: readCount,
+              archived: archivedCount,
+              quickRead: quickReadCount,
+            }}
+          />
+        )}
+
         {/* Saved Articles or Empty State */}
-        {user.savedItems.length > 0 ? (
-          <SavedItemsList items={user.savedItems} />
+        {savedItems.length > 0 ? (
+          <SavedItemsList items={savedItems} />
         ) : (
           <EmptyState />
         )}

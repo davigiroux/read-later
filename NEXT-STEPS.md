@@ -54,59 +54,57 @@ npm run dev
 
 ## 🚀 Feature Development Tasks
 
-Once the setup is complete, continue with these features:
-
-### Phase 1: User Sync & Basic Save
-1. **Clerk Webhook for User Sync**
-   - Create API route: `src/app/api/webhooks/clerk/route.ts`
+### ✅ Phase 1: User Sync & Basic Save (COMPLETE)
+1. **Clerk Webhook for User Sync** ✅
    - Sync Clerk users to database User table
    - Handle user.created and user.updated events
 
-2. **Save Article Functionality**
-   - Create API route: `src/app/api/articles/save/route.ts`
-   - Accept URL from user
-   - Use cheerio to extract article content
-   - Calculate estimated reading time (word count / readingSpeed)
-   - Save to SavedItem table
+2. **Save Article Functionality** ✅
+   - Server action to save articles
+   - Uses Jina AI Reader to extract article content
+   - Calculates estimated reading time
+   - Calls AI analysis for topics and relevance scoring
 
-3. **Dashboard UI Update**
-   - Replace placeholder with actual SavedItems list
-   - Display: title, URL, topics, relevanceScore, estimatedTime
-   - Add "Save Article" form with URL input
-   - Show empty state when no articles
+3. **Dashboard UI Update** ✅
+   - Displays SavedItems list with topics, relevance scores, estimated time
+   - Save Article form with URL input
+   - Empty state when no articles
 
-### Phase 2: AI Analysis & Ranking
-4. **AI Content Analysis**
-   - Extract topics from article content using Gemini
-   - Generate relevance score based on user interests
-   - Create reasoning explanation for the score
-   - Store in SavedItem (topics, relevanceScore, reasoning)
+### ✅ Phase 2: AI Analysis & Ranking (COMPLETE)
+4. **AI Content Analysis** ✅
+   - Uses `generateObject` with Zod for type-safe structured output
+   - Extracts topics from article content using Gemini 2.0 Flash
+   - Generates relevance score (0-1) based on user interests and goals
+   - Creates reasoning explanation for the score
+   - Stored in SavedItem (topics, relevanceScore, reasoning)
 
-5. **User Profile Setup**
-   - Create onboarding flow to collect:
-     - User interests (tags/topics)
-     - Goals (what they want to learn)
-     - Reading speed (WPM)
-   - Store in User table
-   - Allow editing from dashboard
+5. **User Profile Setup** ✅
+   - Settings page to update interests, goals, reading speed
+   - Stored in User table
+   - Used by AI for relevance scoring
 
-6. **Smart Ranking**
-   - Sort articles by relevanceScore
-   - Add filters: All / Unread / Read / Archived
-   - Add "Quick Read" filter (< 5 min)
+6. **Smart Ranking** ✅
+   - Articles sorted by relevanceScore (desc) then savedAt (desc)
+   - Filter tabs: All / Unread / Read / Archived / Quick Read (< 5 min)
+   - URL-based filtering with counts
+   - Mark as read/unread and archive/unarchive actions
+   - Optimistic UI updates for instant feedback
+   - Database indexes for optimal filter performance
 
-### Phase 3: Reading Experience
-7. **Mark as Read**
-   - Add button to mark article as read
-   - Update `readAt` timestamp
-   - Show read articles with different styling
+### 🔄 Phase 3: Reading Experience (PARTIALLY COMPLETE)
+7. **Mark as Read** ✅
+   - Mark as read/unread buttons with icons
+   - Updates `readAt` timestamp
+   - Read articles shown with reduced opacity
+   - Optimistic UI updates
 
-8. **Archive Functionality**
-   - Add archive button
-   - Update `archivedAt` timestamp
-   - Hide from main list (show in archive view)
+8. **Archive Functionality** ✅
+   - Archive/unarchive buttons with icons
+   - Updates `archivedAt` timestamp
+   - Hidden from main list (shown in archive filter)
+   - Optimistic UI updates
 
-9. **Reading View**
+9. **Reading View** 📋 TODO
    - Create article detail page
    - Display full content with clean typography
    - Show AI reasoning for recommendation

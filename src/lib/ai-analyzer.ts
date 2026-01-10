@@ -1,11 +1,15 @@
-import { generateText } from 'ai';
+import { generateObject } from 'ai';
 import { model } from './ai';
+import { z } from 'zod';
 
-export interface ArticleAnalysis {
-  topics: string[];
-  relevanceScore: number;
-  reasoning: string;
-}
+// Define Zod schema for AI response
+const ArticleAnalysisSchema = z.object({
+  topics: z.array(z.string()).max(5).describe('3-5 key topics from the article'),
+  relevanceScore: z.number().min(0).max(1).describe('Relevance score between 0 and 1'),
+  reasoning: z.string().max(500).describe('Brief explanation of relevance (1-2 sentences)'),
+});
+
+export type ArticleAnalysis = z.infer<typeof ArticleAnalysisSchema>;
 
 /**
  * Analyze article content using AI to extract topics and calculate relevance
@@ -26,66 +30,35 @@ export async function analyzeArticle(
   const hasInterests = userInterests.length > 0 || userGoals;
 
   const prompt = hasInterests
-    ? `Analyze this article and extract 3-5 key topics (as short phrases or single words).
-Then, calculate how relevant this article is to the user based on their interests and goals.
+    ? `Analyze this article and extract 3-5 key topics.
+Calculate how relevant this article is to the user based on their interests and goals.
 
-User's Interests: ${userInterests.join(', ') || 'None specified'}
-User's Goals: ${userGoals || 'None specified'}
+User's Interests: ${userInterests.join(', ') || 'None'}
+User's Goals: ${userGoals || 'None'}
 
 Article Content:
 ${truncatedContent}
 
-Respond in this exact JSON format:
-{
-  "topics": ["topic1", "topic2", "topic3"],
-  "relevanceScore": 0.85,
-  "reasoning": "Brief explanation of why this article matches or doesn't match the user's interests"
-}
-
-The relevanceScore should be between 0 and 1, where:
-- 0.8-1.0: Highly relevant, directly related to user's interests
+Relevance Score Guidelines:
+- 0.8-1.0: Highly relevant, directly related to interests
 - 0.5-0.79: Moderately relevant, tangentially related
-- 0.0-0.49: Less relevant, little connection to interests
-
-Keep the reasoning concise (1-2 sentences).`
-    : `Analyze this article and extract 3-5 key topics (as short phrases or single words).
+- 0.0-0.49: Less relevant, little connection`
+    : `Analyze this article and extract 3-5 key topics.
+Set relevance score to 0 since user hasn't specified interests yet.
 
 Article Content:
-${truncatedContent}
-
-Respond in this exact JSON format:
-{
-  "topics": ["topic1", "topic2", "topic3"],
-  "relevanceScore": 0,
-  "reasoning": "User hasn't set interests yet, so relevance cannot be determined."
-}`;
+${truncatedContent}`;
 
   try {
-    const { text } = await generateText({
+    const { object } = await generateObject({
       model,
+      schema: ArticleAnalysisSchema,
       prompt,
-      temperature: 0.3, // Lower temperature for more consistent JSON output
+      temperature: 0.3,
     });
 
-    // Parse the JSON response
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('AI response did not contain valid JSON');
-    }
-
-    const analysis = JSON.parse(jsonMatch[0]) as ArticleAnalysis;
-
-    // Validate and sanitize the response
-    return {
-      topics: Array.isArray(analysis.topics)
-        ? analysis.topics.slice(0, 5).map((t) => String(t).slice(0, 50))
-        : [],
-      relevanceScore: Math.max(
-        0,
-        Math.min(1, Number(analysis.relevanceScore) || 0)
-      ),
-      reasoning: String(analysis.reasoning || '').slice(0, 500),
-    };
+    // Response is already validated by Zod, just return it
+    return object;
   } catch (error) {
     console.error('AI analysis error:', error);
 
