@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(npx --version)",
+      "Bash(npm --version:*)",
+      "Bash(node --version:*)",
+      "WebSearch",
+      "Bash(vercel help:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run build:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}

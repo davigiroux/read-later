@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(cuid())
+  clerkId       String      @unique
+  email         String      @unique
+  name          String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // User profile for ranking
+  interests     String[]
+  goals         String      @default("")
+  readingSpeed  Int         @default(250)
+
+  savedItems    SavedItem[]
+}
+
+model SavedItem {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Content
+  url             String
+  title           String
+  content         String    @db.Text
+  estimatedTime   Int       // minutes to read
+
+  // AI Analysis
+  topics          String[]
+  relevanceScore  Float     @default(0)
+  reasoning       String    @db.Text @default("")
+
+  // Metadata
+  savedAt         DateTime  @default(now())
+  readAt          DateTime?
+  archivedAt      DateTime?
+
+  @@index([userId, relevanceScore])
+  @@index([userId, savedAt])
+}
