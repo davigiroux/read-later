@@ -1,8 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Read Later
 
-## Getting Started
+A lightweight, personal "read later" app for saving web articles, notes, and resources you want to come back to. The project focuses on fast, accessible browsing of saved items, concise tagging for quick scanning, and a minimal, local-first workflow.
 
-First, run the development server:
+Key ideas
+
+- Save links and short notes for articles, blog posts, and resources.
+- Use concise, objective tags (1–2 words) so topics are visible at a glance.
+- Keep the UI minimal and fast with predictable navigation and clear affordances.
+
+Tech stack
+
+- Next.js (App Router) — server- and client-rendered React framework
+- TypeScript — primary language across the codebase
+- CSS — for styling (small footprint)
+
+Getting started
+
+1. Install dependencies
+
+```bash
+npm install
+# or
+yarn
+# or
+pnpm install
+```
+
+2. Run the development server
 
 ```bash
 npm run dev
@@ -14,23 +38,17 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open http://localhost:3000 in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Notes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- This repository is primarily TypeScript (≈92%). Styling uses plain CSS with a small amount of JavaScript.
+- We recently standardized tags to be shorter and more objective to improve scanability.
 
-## Learn More
+Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Contributions are welcome. Open an issue or submit a pull request for changes.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
