@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { SavedItemsList } from './saved-items-list';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface SavedItem {
   id: string;

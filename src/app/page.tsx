@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Clock, Target, TrendingUp } from 'lucide-react';
+import { Sparkles, Clock, Target } from 'lucide-react';
 
 export default function Home() {
   return (
