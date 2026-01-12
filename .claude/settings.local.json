@@ -21,7 +21,8 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "mcp__plugin_playwright_playwright__browser_click",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(gh pr create --title \"feat: add card/list view toggle \\(Issue #7\\)\" --body \"$\\(cat <<''EOF''\n## Summary\n- Implemented card/list view toggle with localStorage persistence\n- View preference persists across sessions \\(default: card view\\)\n- All filters and actions work identically in both views\n- Optimistic cards always display as cards \\(loading/error states\\)\n- List view: comfortable spacing, max 3 topics, clickable titles\n\n## Implementation\n**New Files:**\n- `src/lib/article-utils.ts` - Shared utilities \\(formatRelativeTime, getDomain\\)\n- `src/hooks/use-local-storage.ts` - Generic localStorage hook with SSR safety\n- `src/hooks/use-view-preference.ts` - View preference wrapper\n- `src/components/dashboard/view-toggle.tsx` - Toggle UI \\(grid/list icons\\)\n- `src/components/dashboard/article-card.tsx` - Extracted card component\n- `src/components/dashboard/article-list-item.tsx` - List view component\n\n**Modified:**\n- `saved-items-list.tsx` - View switching logic\n- `dashboard/page.tsx` - Added ViewToggle next to FilterTabs\n- `optimistic-article-card.tsx` - Uses shared utilities\n- Improved error type guards \\(from main\\)\n\n## Test Plan\n- [x] Build successful\n- [x] SSR hydration error fixed\n- [ ] Toggle switches views\n- [ ] View persists on reload\n- [ ] All 5 filters work in both views\n- [ ] Actions \\(read/unread, archive\\) work in both views\n- [ ] Responsive on mobile/tablet/desktop\n- [ ] Dark mode styling correct\n\n🤖 Generated with Claude Code\n\nCloses #7\nEOF\n\\)\")"
     ]
   }
 }
