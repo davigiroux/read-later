@@ -136,7 +136,7 @@ export function OptimisticArticlesProvider({ children, initialArticles }: Optimi
           prev.map(a => a.optimisticId === optimisticId ? errorArticle : a)
         );
       }
-    } catch (error) {
+    } catch {
       // Unexpected error - update to error status
       const errorArticle: OptimisticArticle = {
         ...optimisticArticle,

@@ -52,10 +52,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           readingSpeed: 250,
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       // User was created by webhook between our check and create attempt
       // Just query for them again
-      if (error.code === 'P2002') {
+      if ((error as { code?: string }).code === 'P2002') {
         user = await db.user.findUnique({
           where: { clerkId: userId },
         });
@@ -93,9 +93,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   // Group items by status for "all" view
   const groupedItems = filter === 'all' ? {
-    unread: savedItems.filter(item => !item.readAt && !item.archivedAt),
-    read: savedItems.filter(item => item.readAt && !item.archivedAt),
-    archived: savedItems.filter(item => item.archivedAt),
+    unread: savedItems.filter((item: { readAt: Date | null; archivedAt: Date | null }) => !item.readAt && !item.archivedAt),
+    read: savedItems.filter((item: { readAt: Date | null; archivedAt: Date | null }) => item.readAt && !item.archivedAt),
+    archived: savedItems.filter((item: { archivedAt: Date | null }) => item.archivedAt),
   } : null;
 
   // Calculate counts for all filters (parallel queries for performance)

@@ -30,7 +30,7 @@ import {
 } from './optimistic-article-card';
 
 interface SavedItemsListProps {
-  // No longer receives items directly - gets from context
+  items?: SavedItem[];
 }
 
 /**
@@ -67,12 +67,12 @@ type ArticleAction = 'read' | 'unread' | 'archive' | 'unarchive';
  * Client component that displays a grid of saved articles with action buttons
  * Supports optimistic UI updates for both new articles and read/archive actions
  */
-export function SavedItemsList({}: SavedItemsListProps) {
+export function SavedItemsList({ items }: SavedItemsListProps) {
   const { articles, retryArticle, dismissArticle } = useOptimisticArticles();
   const [isPending, startTransition] = useTransition();
 
-  // Separate optimistic articles from saved items
-  const savedItems = articles.filter(a => !isOptimisticArticle(a)) as SavedItem[];
+  // Use provided items or get all from context
+  const savedItems = items || (articles.filter(a => !isOptimisticArticle(a)) as SavedItem[]);
   const [optimisticItems, updateOptimisticItems] = useOptimistic(
     savedItems,
     (state, { id, action }: { id: string; action: ArticleAction }) => {
@@ -375,7 +375,7 @@ export function SavedItemsList({}: SavedItemsListProps) {
             {/* AI reasoning (if relevance score exists) */}
             {item.reasoning && item.relevanceScore > 0 && (
               <div className="flex gap-2 items-start">
-                <span className="text-muted-foreground/40 text-sm mt-0.5">"</span>
+                <span className="text-muted-foreground/40 text-sm mt-0.5">&quot;</span>
                 <p className={cn(
                   "text-xs italic leading-relaxed transition-colors flex-1",
                   !isArchived && "text-muted-foreground",
@@ -383,7 +383,7 @@ export function SavedItemsList({}: SavedItemsListProps) {
                 )}>
                   {item.reasoning}
                 </p>
-                <span className="text-muted-foreground/40 text-sm mt-0.5">"</span>
+                <span className="text-muted-foreground/40 text-sm mt-0.5">&quot;</span>
               </div>
             )}
           </CardContent>

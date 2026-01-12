@@ -65,7 +65,7 @@ export function ProfileSettingsForm({
           disabled={isPending}
         />
         <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-          Comma-separated list of topics you're interested in
+          Comma-separated list of topics you&apos;re interested in
         </p>
       </div>
 
