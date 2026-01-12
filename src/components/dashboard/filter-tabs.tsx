@@ -2,8 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface FilterTabsProps {
   counts: {
@@ -28,31 +27,36 @@ export function FilterTabs({ counts }: FilterTabsProps) {
   ];
 
   return (
-    <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+    <div className="inline-flex items-center rounded-lg bg-muted p-1 mb-6 overflow-x-auto">
       {tabs.map((tab) => {
         const isActive = currentFilter === tab.value;
         const href =
           tab.value === 'all' ? '/dashboard' : `/dashboard?filter=${tab.value}`;
 
         return (
-          <Button
+          <Link
             key={tab.value}
-            asChild
-            variant={isActive ? 'default' : 'outline'}
-            size="sm"
+            href={href}
+            className={cn(
+              'relative inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 h-10 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+              isActive
+                ? 'bg-background text-foreground shadow-sm font-semibold'
+                : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
+            )}
           >
-            <Link href={href} className="flex items-center gap-2">
-              {tab.label}
-              {tab.count > 0 && (
-                <Badge
-                  variant={isActive ? 'secondary' : 'outline'}
-                  className="ml-1"
-                >
+            {tab.label}
+            {tab.count > 0 && (
+              <>
+                <span className="mx-1.5 text-muted-foreground/40">·</span>
+                <span className={cn(
+                  'text-sm tabular-nums transition-colors',
+                  isActive ? 'text-muted-foreground font-medium' : 'text-muted-foreground/60'
+                )}>
                   {tab.count}
-                </Badge>
-              )}
-            </Link>
-          </Button>
+                </span>
+              </>
+            )}
+          </Link>
         );
       })}
     </div>

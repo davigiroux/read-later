@@ -89,6 +89,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     take: 50,
   });
 
+  // Group items by status for "all" view
+  const groupedItems = filter === 'all' ? {
+    unread: savedItems.filter(item => !item.readAt && !item.archivedAt),
+    read: savedItems.filter(item => item.readAt && !item.archivedAt),
+    archived: savedItems.filter(item => item.archivedAt),
+  } : null;
+
   // Calculate counts for all filters (parallel queries for performance)
   const [allCount, unreadCount, readCount, archivedCount, quickReadCount] =
     await Promise.all([
@@ -100,21 +107,21 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     ]);
 
   return (
-    <div className="min-h-screen bg-zinc-50 p-8 dark:bg-zinc-950">
-      <div className="mx-auto max-w-6xl">
+    <div className="min-h-screen bg-background p-8 animate-[fade-in_0.4s_ease-out]">
+      <div className="mx-auto max-w-7xl space-y-10">
         {/* Header */}
-        <div className="mb-8 flex items-start justify-between">
+        <div className="flex items-start justify-between">
           <div>
-            <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h1 className="mb-2 text-4xl font-bold tracking-tight">
               Dashboard
             </h1>
-            <p className="text-zinc-600 dark:text-zinc-400">
+            <p className="text-muted-foreground text-lg">
               Your reading queue
               {allCount > 0 &&
-                ` • ${allCount} article${allCount !== 1 ? "s" : ""} saved`}
+                ` · ${allCount} article${allCount !== 1 ? "s" : ""} saved`}
             </p>
           </div>
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="outline" asChild>
             <Link href="/settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
               Settings
@@ -123,8 +130,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </div>
 
         {/* Save Article Form */}
-        <div className="mb-12 rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <div className="rounded-xl border bg-card p-8 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold">
             Save New Article
           </h2>
           <SaveArticleForm />
@@ -145,7 +152,52 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
         {/* Saved Articles or Empty State */}
         {savedItems.length > 0 ? (
-          <SavedItemsList items={savedItems} />
+          filter === 'all' && groupedItems ? (
+            <div className="space-y-12">
+              {/* Unread Section */}
+              {groupedItems.unread.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-semibold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                      Up Next
+                    </h2>
+                    <span className="text-lg text-muted-foreground">
+                      {groupedItems.unread.length}
+                    </span>
+                  </div>
+                  <SavedItemsList items={groupedItems.unread} />
+                </div>
+              )}
+
+              {/* Read Section */}
+              {groupedItems.read.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-semibold">Read</h2>
+                    <span className="text-lg text-muted-foreground">
+                      {groupedItems.read.length}
+                    </span>
+                  </div>
+                  <SavedItemsList items={groupedItems.read} />
+                </div>
+              )}
+
+              {/* Archived Section */}
+              {groupedItems.archived.length > 0 && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-2xl font-semibold">Archived</h2>
+                    <span className="text-lg text-muted-foreground">
+                      {groupedItems.archived.length}
+                    </span>
+                  </div>
+                  <SavedItemsList items={groupedItems.archived} />
+                </div>
+              )}
+            </div>
+          ) : (
+            <SavedItemsList items={savedItems} />
+          )
         ) : (
           <EmptyState />
         )}
