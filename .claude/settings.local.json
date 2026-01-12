@@ -19,7 +19,9 @@
       "Bash(git pull:*)",
       "Bash(git stash:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "Bash(npm run lint)"
     ]
   }
 }

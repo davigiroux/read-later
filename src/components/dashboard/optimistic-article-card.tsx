@@ -11,18 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-/**
- * Extract domain from URL for display
- */
-function getDomain(url: string): string {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.hostname.replace('www.', '');
-  } catch {
-    return 'Loading...';
-  }
-}
+import { getDomain } from '@/lib/article-utils';
 
 /**
  * Shimmer skeleton component with refined gradient animation

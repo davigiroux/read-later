@@ -6,6 +6,7 @@ import { SavedItemsList } from "@/components/dashboard/saved-items-list";
 import { GroupedItemsDisplay } from "@/components/dashboard/grouped-items-display";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { FilterTabs } from "@/components/dashboard/filter-tabs";
+import { ViewToggle } from "@/components/dashboard/view-toggle";
 import { OptimisticArticlesProvider } from "@/contexts/optimistic-articles-context";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
@@ -55,7 +56,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     } catch (error: unknown) {
       // User was created by webhook between our check and create attempt
       // Just query for them again
-      if ((error as { code?: string }).code === 'P2002') {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
         user = await db.user.findUnique({
           where: { clerkId: userId },
         });
@@ -141,17 +142,20 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
             <SaveArticleForm />
           </div>
 
-          {/* Filter Tabs */}
+          {/* Filter Tabs with View Toggle */}
           {allCount > 0 && (
-            <FilterTabs
-              counts={{
-                all: allCount,
-                unread: unreadCount,
-                read: readCount,
-                archived: archivedCount,
-                quickRead: quickReadCount,
-              }}
-            />
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <FilterTabs
+                counts={{
+                  all: allCount,
+                  unread: unreadCount,
+                  read: readCount,
+                  archived: archivedCount,
+                  quickRead: quickReadCount,
+                }}
+              />
+              <ViewToggle />
+            </div>
           )}
 
           {/* Saved Articles or Empty State */}

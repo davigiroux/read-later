@@ -80,7 +80,7 @@ export async function saveArticle(
         });
       } catch (error: unknown) {
         // User was created by webhook between our check and create attempt
-        if ((error as { code?: string }).code === 'P2002') {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
           user = await db.user.findUnique({
             where: { clerkId: userId },
           });
