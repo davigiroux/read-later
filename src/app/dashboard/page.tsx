@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { SaveArticleForm } from "@/components/dashboard/save-article-form";
 import { SavedItemsList } from "@/components/dashboard/saved-items-list";
+import { GroupedItemsDisplay } from "@/components/dashboard/grouped-items-display";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { FilterTabs } from "@/components/dashboard/filter-tabs";
 import { Button } from "@/components/ui/button";
@@ -153,48 +154,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         {/* Saved Articles or Empty State */}
         {savedItems.length > 0 ? (
           filter === 'all' && groupedItems ? (
-            <div className="space-y-12">
-              {/* Unread Section */}
-              {groupedItems.unread.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-semibold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                      Up Next
-                    </h2>
-                    <span className="text-lg text-muted-foreground">
-                      {groupedItems.unread.length}
-                    </span>
-                  </div>
-                  <SavedItemsList items={groupedItems.unread} />
-                </div>
-              )}
-
-              {/* Read Section */}
-              {groupedItems.read.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-semibold">Read</h2>
-                    <span className="text-lg text-muted-foreground">
-                      {groupedItems.read.length}
-                    </span>
-                  </div>
-                  <SavedItemsList items={groupedItems.read} />
-                </div>
-              )}
-
-              {/* Archived Section */}
-              {groupedItems.archived.length > 0 && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-semibold">Archived</h2>
-                    <span className="text-lg text-muted-foreground">
-                      {groupedItems.archived.length}
-                    </span>
-                  </div>
-                  <SavedItemsList items={groupedItems.archived} />
-                </div>
-              )}
-            </div>
+            <GroupedItemsDisplay
+              unread={groupedItems.unread}
+              read={groupedItems.read}
+              archived={groupedItems.archived}
+            />
           ) : (
             <SavedItemsList items={savedItems} />
           )
