@@ -14,7 +14,12 @@
       "Bash(npm run build:*)",
       "Bash(cat:*)",
       "Bash(curl:*)",
-      "Skill(frontend-design)"
+      "Skill(frontend-design)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
