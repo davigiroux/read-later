@@ -1,47 +1,29 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { Loader2, Link2, Plus, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Link2, Plus, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { saveArticle } from '@/app/actions/save-article';
+import { useOptimisticArticles } from '@/contexts/optimistic-articles-context';
 import { cn } from '@/lib/utils';
 
 /**
  * Client component for saving article URLs
- * Handles form submission with loading and error states
+ * Enables continuous submission with optimistic UI updates
  */
 export function SaveArticleForm() {
   const [url, setUrl] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const { addOptimisticArticle } = useOptimisticArticles();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Reset states
-    setError(null);
-    setSuccess(false);
+    // Store URL and clear input immediately for next submission
+    const submittedUrl = url.trim();
+    setUrl('');
 
-    // Create FormData
-    const formData = new FormData();
-    formData.append('url', url);
-
-    // Submit with transition for pending state
-    startTransition(async () => {
-      const result = await saveArticle(formData);
-
-      if (result.success) {
-        setSuccess(true);
-        setUrl(''); // Clear input on success
-
-        // Clear success message after 3 seconds
-        setTimeout(() => setSuccess(false), 3000);
-      } else {
-        setError(result.error || 'Failed to save article');
-      }
-    });
+    // Add optimistic article (context handles server action)
+    await addOptimisticArticle(submittedUrl);
   };
 
   return (
@@ -56,11 +38,10 @@ export function SaveArticleForm() {
               placeholder="https://example.com/article"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              disabled={isPending}
               className="pl-11 pr-10"
               required
             />
-            {url && !isPending && (
+            {url && (
               <button
                 type="button"
                 onClick={() => setUrl('')}
@@ -73,51 +54,19 @@ export function SaveArticleForm() {
           </div>
           <Button
             type="submit"
-            disabled={isPending || !url.trim()}
+            disabled={!url.trim()}
             variant="premium"
             className="min-w-[140px]"
           >
-            {isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Plus className="h-4 w-4" />
-                Save Article
-              </>
-            )}
+            <Plus className="h-4 w-4" />
+            Save Article
           </Button>
         </div>
-
-        {/* Error message with better styling */}
-        {error && (
-          <div className={cn(
-            "flex items-start gap-2 text-sm px-4 py-3 rounded-lg border animate-[slide-up_0.2s_ease-out]",
-            "bg-destructive/5 border-destructive/20 text-destructive"
-          )}>
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        {/* Success message with animation */}
-        {success && (
-          <div className={cn(
-            "flex items-start gap-2 text-sm px-4 py-3 rounded-lg border animate-[scale-in_0.2s_ease-out]",
-            "bg-[oklch(0.96_0.02_165)] border-[oklch(0.85_0.02_165)] text-[oklch(0.40_0.06_165)]",
-            "dark:bg-[oklch(0.20_0.015_165)] dark:border-[oklch(0.28_0.02_165)] dark:text-[oklch(0.75_0.05_165)]"
-          )}>
-            <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
-            <span className="font-medium">Article saved successfully!</span>
-          </div>
-        )}
       </form>
 
       {/* Helper text */}
       <p className="text-sm text-muted-foreground mt-3">
-        Paste any article URL to save it to your reading queue
+        Paste any article URL to save it to your reading queue. You can add multiple articles at once!
       </p>
     </div>
   );

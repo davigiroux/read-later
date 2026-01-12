@@ -6,6 +6,7 @@ import { SavedItemsList } from "@/components/dashboard/saved-items-list";
 import { GroupedItemsDisplay } from "@/components/dashboard/grouped-items-display";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { FilterTabs } from "@/components/dashboard/filter-tabs";
+import { OptimisticArticlesProvider } from "@/contexts/optimistic-articles-context";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import Link from "next/link";
@@ -130,41 +131,44 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           </Button>
         </div>
 
-        {/* Save Article Form */}
-        <div className="rounded-xl border bg-card p-8 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold">
-            Save New Article
-          </h2>
-          <SaveArticleForm />
-        </div>
+        {/* Wrap client components in OptimisticArticlesProvider */}
+        <OptimisticArticlesProvider initialArticles={savedItems}>
+          {/* Save Article Form */}
+          <div className="rounded-xl border bg-card p-8 shadow-sm">
+            <h2 className="mb-4 text-xl font-semibold">
+              Save New Article
+            </h2>
+            <SaveArticleForm />
+          </div>
 
-        {/* Filter Tabs */}
-        {allCount > 0 && (
-          <FilterTabs
-            counts={{
-              all: allCount,
-              unread: unreadCount,
-              read: readCount,
-              archived: archivedCount,
-              quickRead: quickReadCount,
-            }}
-          />
-        )}
-
-        {/* Saved Articles or Empty State */}
-        {savedItems.length > 0 ? (
-          filter === 'all' && groupedItems ? (
-            <GroupedItemsDisplay
-              unread={groupedItems.unread}
-              read={groupedItems.read}
-              archived={groupedItems.archived}
+          {/* Filter Tabs */}
+          {allCount > 0 && (
+            <FilterTabs
+              counts={{
+                all: allCount,
+                unread: unreadCount,
+                read: readCount,
+                archived: archivedCount,
+                quickRead: quickReadCount,
+              }}
             />
+          )}
+
+          {/* Saved Articles or Empty State */}
+          {savedItems.length > 0 ? (
+            filter === 'all' && groupedItems ? (
+              <GroupedItemsDisplay
+                unread={groupedItems.unread}
+                read={groupedItems.read}
+                archived={groupedItems.archived}
+              />
+            ) : (
+              <SavedItemsList />
+            )
           ) : (
-            <SavedItemsList items={savedItems} />
-          )
-        ) : (
-          <EmptyState />
-        )}
+            <EmptyState />
+          )}
+        </OptimisticArticlesProvider>
       </div>
     </div>
   );

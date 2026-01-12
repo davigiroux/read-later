@@ -17,6 +17,18 @@ const SaveArticleSchema = z.object({
 export interface SaveArticleResult {
   success: boolean;
   itemId?: string;
+  data?: {
+    id: string;
+    url: string;
+    title: string;
+    estimatedTime: number;
+    savedAt: Date;
+    topics: string[];
+    relevanceScore: number;
+    reasoning: string;
+    readAt: Date | null;
+    archivedAt: Date | null;
+  };
   error?: string;
 }
 
@@ -137,6 +149,18 @@ export async function saveArticle(
     return {
       success: true,
       itemId: savedItem.id,
+      data: {
+        id: savedItem.id,
+        url: savedItem.url,
+        title: savedItem.title,
+        estimatedTime: savedItem.estimatedTime,
+        savedAt: savedItem.savedAt,
+        topics: savedItem.topics,
+        relevanceScore: savedItem.relevanceScore,
+        reasoning: savedItem.reasoning,
+        readAt: savedItem.readAt,
+        archivedAt: savedItem.archivedAt,
+      },
     };
   } catch (error) {
     // Log error for debugging
