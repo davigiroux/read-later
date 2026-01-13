@@ -43,7 +43,7 @@ export async function saveArticle(
     // 1. Authenticate user
     const { userId } = await auth();
     if (!userId) {
-      return { success: false, error: 'You must be signed in to save articles' };
+      return { success: false, error: 'You must be signed in to stack articles' };
     }
 
     // 2. Validate URL input
@@ -109,7 +109,7 @@ export async function saveArticle(
     if (existing) {
       return {
         success: false,
-        error: "You've already saved this article!",
+        error: "This article is already in your stack",
       };
     }
 

@@ -58,14 +58,14 @@ export function SaveArticleForm() {
             className="min-w-[140px]"
           >
             <Plus className="h-4 w-4" />
-            Save Article
+            Stack Article
           </Button>
         </div>
       </form>
 
       {/* Helper text */}
       <p className="text-sm text-muted-foreground mt-3">
-        Paste any article URL to save it to your reading queue. You can add multiple articles at once!
+        Paste any article URL to add it to your stack
       </p>
     </div>
   );

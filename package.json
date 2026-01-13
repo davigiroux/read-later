@@ -1,6 +1,20 @@
 {
-  "name": "read-later",
+  "name": "laterstack",
   "version": "0.1.0",
+  "description": "Your smart reading queue - AI-powered article prioritization",
+  "author": "Davi Giroux <davigiroux@gmail.com>",
+  "homepage": "https://laterstack.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davigiroux/read-later"
+  },
+  "keywords": [
+    "reading",
+    "articles",
+    "ai",
+    "productivity",
+    "recommendations"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev",

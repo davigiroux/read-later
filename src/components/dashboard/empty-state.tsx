@@ -16,10 +16,10 @@ export function EmptyState() {
 
       {/* Main message */}
       <h3 className="text-2xl font-semibold mb-3 max-w-md">
-        Your reading queue awaits
+        Your stack is empty
       </h3>
       <p className="text-muted-foreground text-lg max-w-md mb-8 leading-relaxed">
-        Save your first article to start building your personalized reading collection.
+        Stack your first article above to get started
       </p>
 
       {/* Helpful suggestions */}
