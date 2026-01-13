@@ -27,7 +27,7 @@ export function FilterTabs({ counts }: FilterTabsProps) {
   ];
 
   return (
-    <div className="inline-flex items-center rounded-lg bg-muted p-1 mb-6 overflow-x-auto">
+    <div className="flex w-full items-center rounded-lg bg-muted p-1 mb-6 overflow-x-auto">
       {tabs.map((tab) => {
         const isActive = currentFilter === tab.value;
         const href =
@@ -38,18 +38,18 @@ export function FilterTabs({ counts }: FilterTabsProps) {
             key={tab.value}
             href={href}
             className={cn(
-              'relative inline-flex items-center justify-center whitespace-nowrap rounded-md px-4 h-10 text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+              'relative inline-flex items-center justify-center whitespace-nowrap rounded-md px-2 sm:px-3 md:px-4 h-9 sm:h-10 text-xs sm:text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 flex-shrink-0',
               isActive
                 ? 'bg-background text-foreground shadow-sm font-semibold'
                 : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'
             )}
           >
-            {tab.label}
+            <span className="truncate">{tab.label}</span>
             {tab.count > 0 && (
               <>
-                <span className="mx-1.5 text-muted-foreground/40">·</span>
+                <span className="mx-1 sm:mx-1.5 text-muted-foreground/40">·</span>
                 <span className={cn(
-                  'text-sm tabular-nums transition-colors',
+                  'text-xs sm:text-sm tabular-nums transition-colors',
                   isActive ? 'text-muted-foreground font-medium' : 'text-muted-foreground/60'
                 )}>
                   {tab.count}
