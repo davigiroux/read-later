@@ -18,6 +18,7 @@ export function useLocalStorage<T>(
 ): [T, (value: T) => void, () => void] {
   // Always initialize with default value to match server render
   const [storedValue, setStoredValue] = useState<T>(defaultValue);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // After mount, read from localStorage and update if different
   useEffect(() => {
@@ -28,17 +29,21 @@ export function useLocalStorage<T>(
       }
     } catch (error) {
       console.warn(`Error reading localStorage key "${key}":`, error);
+    } finally {
+      setIsHydrated(true);
     }
   }, [key]);
 
-  // Sync state to localStorage whenever it changes (after mount)
+  // Sync state to localStorage ONLY after hydration
   useEffect(() => {
+    if (!isHydrated) return;
+
     try {
       window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {
       console.warn(`Error setting localStorage key "${key}":`, error);
     }
-  }, [key, storedValue]);
+  }, [key, storedValue, isHydrated]);
 
   // Setter function
   const setValue = useCallback((value: T) => {

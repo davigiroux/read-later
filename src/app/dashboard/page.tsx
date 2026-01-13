@@ -8,12 +8,13 @@ import { EmptyState } from "@/components/dashboard/empty-state";
 import { FilterTabs } from "@/components/dashboard/filter-tabs";
 import { ViewToggle } from "@/components/dashboard/view-toggle";
 import { OptimisticArticlesProvider } from "@/contexts/optimistic-articles-context";
+import { ViewPreferenceProvider } from "@/contexts/view-preference-context";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Dashboard | Read Later",
+  title: "Dashboard | LaterStack",
   description: "Your AI-powered reading queue",
 };
 
@@ -119,9 +120,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
               Dashboard
             </h1>
             <p className="text-muted-foreground text-lg">
-              Your reading queue
+              Your reading stack
               {allCount > 0 &&
-                ` · ${allCount} article${allCount !== 1 ? "s" : ""} saved`}
+                ` · ${allCount} article${allCount !== 1 ? "s" : ""}`}
             </p>
           </div>
           <Button variant="outline" asChild>
@@ -132,12 +133,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           </Button>
         </div>
 
-        {/* Wrap client components in OptimisticArticlesProvider */}
-        <OptimisticArticlesProvider initialArticles={savedItems}>
+        {/* Wrap client components in providers */}
+        <ViewPreferenceProvider>
+          <OptimisticArticlesProvider initialArticles={savedItems}>
           {/* Save Article Form */}
           <div className="rounded-xl border bg-card p-8 shadow-sm">
             <h2 className="mb-4 text-xl font-semibold">
-              Save New Article
+              Stack New Article
             </h2>
             <SaveArticleForm />
           </div>
@@ -172,7 +174,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
           ) : (
             <EmptyState />
           )}
-        </OptimisticArticlesProvider>
+          </OptimisticArticlesProvider>
+        </ViewPreferenceProvider>
       </div>
     </div>
   );

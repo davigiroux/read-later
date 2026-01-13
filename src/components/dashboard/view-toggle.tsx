@@ -1,7 +1,7 @@
 'use client';
 
 import { LayoutGrid, List } from 'lucide-react';
-import { useViewPreference, type ViewMode } from '@/hooks/use-view-preference';
+import { useViewPreference, type ViewMode } from '@/contexts/view-preference-context';
 import { cn } from '@/lib/utils';
 
 /**

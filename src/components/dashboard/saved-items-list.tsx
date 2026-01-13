@@ -31,7 +31,7 @@ import {
 import { ArticleCard } from './article-card';
 import { ArticleListItem } from './article-list-item';
 import { formatRelativeTime, getDomain } from '@/lib/article-utils';
-import { useViewPreference } from '@/hooks/use-view-preference';
+import { useViewPreference } from '@/contexts/view-preference-context';
 
 interface SavedItemsListProps {
   items?: SavedItem[];  // Optional: when provided, filter to these items (grouped mode)
