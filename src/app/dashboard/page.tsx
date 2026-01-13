@@ -28,6 +28,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const { userId } = await auth();
 
   if (!userId) {
+    console.log({userId})
     redirect("/sign-in");
   }
 
