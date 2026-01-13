@@ -55,9 +55,10 @@ export async function POST(req: Request) {
     if (eventType === 'user.created') {
       const { id, email_addresses, first_name, last_name } = evt.data;
 
-      // Create user in database
-      await db.user.create({
-        data: {
+      // Use upsert to handle race conditions (user might be created by dashboard first)
+      await db.user.upsert({
+        where: { clerkId: id },
+        create: {
           clerkId: id,
           email: email_addresses[0]?.email_address || '',
           name: `${first_name || ''} ${last_name || ''}`.trim() || null,
@@ -65,9 +66,13 @@ export async function POST(req: Request) {
           goals: '',
           readingSpeed: 250,
         },
+        update: {
+          email: email_addresses[0]?.email_address || '',
+          name: `${first_name || ''} ${last_name || ''}`.trim() || null,
+        },
       });
 
-      console.log('✓ User created:', id);
+      console.log('✓ User created/updated via webhook:', id);
     } else if (eventType === 'user.updated') {
       const { id, email_addresses, first_name, last_name } = evt.data;
 
