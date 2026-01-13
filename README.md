@@ -1,54 +1,79 @@
-# Read Later
+# LaterStack
 
-A lightweight, personal "read later" app for saving web articles, notes, and resources you want to come back to. The project focuses on fast, accessible browsing of saved items, concise tagging for quick scanning, and a minimal, local-first workflow.
+Your smart reading queue. Save articles and get AI-powered recommendations on what to read next based on your interests and available time.
 
-Key ideas
+🔗 **[laterstack.io](https://laterstack.io)**
 
-- Save links and short notes for articles, blog posts, and resources.
-- Use concise, objective tags (1–2 words) so topics are visible at a glance.
-- Keep the UI minimal and fast with predictable navigation and clear affordances.
+## Features
 
-Tech stack
+- 🤖 **AI-Powered Ranking** - Articles scored by relevance to your interests
+- ⏱️ **Reading Time Estimates** - Know how long each article takes
+- 🎯 **Personal Goals** - Get recommendations aligned with what you want to learn
+- 📱 **Clean Interface** - Distraction-free reading experience
+- 🔖 **Stack from Anywhere** - Simple URL paste to add articles to your stack
 
-- Next.js (App Router) — server- and client-rendered React framework
-- TypeScript — primary language across the codebase
-- CSS — for styling (small footprint)
+## How It Works
 
-Getting started
+1. **Stack** - Paste any article URL
+2. **AI Ranks** - Articles scored based on your interests and goals
+3. **Read** - Focus on what matters most to you right now
 
-1. Install dependencies
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Authentication:** Clerk
+- **AI Analysis:** Google Gemini
+- **Content Extraction:** Jina AI Reader
+- **Database:** Vercel Postgres (Prisma ORM)
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Deployment:** Vercel
+- **DNS/CDN:** Cloudflare
+
+## Local Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/davigiroux/read-later
+cd read-later
+
+# Install dependencies
 npm install
-# or
-yarn
-# or
-pnpm install
-```
 
-2. Run the development server
+# Set up environment variables
+cp .env.example .env.local
+# Fill in your API keys
 
-```bash
+# Run database migrations
+npx prisma generate
+npx prisma db push
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-3. Open http://localhost:3000 in your browser
+Visit `http://localhost:3000`
 
-Notes
+## Environment Variables
 
-- This repository is primarily TypeScript (≈92%). Styling uses plain CSS with a small amount of JavaScript.
-- We recently standardized tags to be shorter and more objective to improve scanability.
+See `.env.example` for required variables:
+- `DATABASE_URL` - Postgres connection string
+- `CLERK_SECRET_KEY` - Clerk authentication
+- `GOOGLE_GENERATIVE_AI_API_KEY` - Gemini API
+- Plus other Clerk/Next.js variables
 
-Contributing
+## Deployment
 
-Contributions are welcome. Open an issue or submit a pull request for changes.
+Deployed on Vercel with Cloudflare DNS.
 
-License
+## License
 
 MIT
+
+## Author
+
+Built by [Davi Giroux](https://devgiroux.com)
+
+---
+
+**Live Site:** [laterstack.io](https://laterstack.io)

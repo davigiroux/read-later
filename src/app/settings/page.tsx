@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Settings | Read Later",
+  title: "Settings | LaterStack",
   description: "Manage your reading preferences",
 };
 
@@ -44,7 +44,7 @@ export default async function SettingsPage() {
             Settings
           </h1>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Customize your reading preferences to get better article recommendations
+            Customize your reading preferences to get better recommendations for your stack
           </p>
         </div>
 

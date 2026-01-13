@@ -14,7 +14,7 @@ export default function Home() {
           Your smart reading queue
         </h1>
         <p className="mb-12 text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Save articles, get AI-powered recommendations on what to read next based on your interests and available time.
+          Stack articles, get AI-powered recommendations on what to read next based on your interests and available time.
         </p>
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center mb-20">
           <Button asChild variant="premium" size="lg" className="text-base">

@@ -11,18 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-/**
- * Extract domain from URL for display
- */
-function getDomain(url: string): string {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.hostname.replace('www.', '');
-  } catch {
-    return 'Loading...';
-  }
-}
+import { getDomain } from '@/lib/article-utils';
 
 /**
  * Shimmer skeleton component with refined gradient animation
@@ -161,7 +150,8 @@ export function ErrorArticleCard({ url, error, onRetry, onDismiss, index = 0 }: 
   const domain = getDomain(url);
 
   // Check if it's a duplicate error for special styling
-  const isDuplicate = error.toLowerCase().includes('already saved') ||
+  const isDuplicate = error.toLowerCase().includes('already in your stack') ||
+                      error.toLowerCase().includes('already in your collection') ||
                       error.toLowerCase().includes('duplicate');
 
   return (
@@ -206,7 +196,7 @@ export function ErrorArticleCard({ url, error, onRetry, onDismiss, index = 0 }: 
           </CardTitle>
         </div>
         <CardDescription className="text-[oklch(0.48_0.12_25)] dark:text-[oklch(0.62_0.12_25)] font-medium">
-          {isDuplicate ? 'Article already in your collection' : 'Failed to save article'}
+          {isDuplicate ? 'Article already in your collection' : 'Failed to stack article'}
         </CardDescription>
       </CardHeader>
 
