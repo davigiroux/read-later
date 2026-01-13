@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { ProfileSettingsForm } from "@/components/dashboard/profile-settings-form";
 import Link from "next/link";
@@ -14,8 +13,9 @@ export const metadata = {
 export default async function SettingsPage() {
   const { userId } = await auth();
 
+  // Middleware ensures userId is always present on protected routes
   if (!userId) {
-    redirect("/sign-in");
+    throw new Error("Unauthorized - userId not found");
   }
 
   // Get user profile
@@ -24,7 +24,7 @@ export default async function SettingsPage() {
   });
 
   if (!user) {
-    redirect("/dashboard");
+    throw new Error("User not found in database");
   }
 
   return (

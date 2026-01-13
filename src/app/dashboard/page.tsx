@@ -1,5 +1,4 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { SaveArticleForm } from "@/components/dashboard/save-article-form";
 import { SavedItemsList } from "@/components/dashboard/saved-items-list";
@@ -27,9 +26,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const filter = params.filter || 'all';
   const { userId } = await auth();
 
+  // Middleware ensures userId is always present on protected routes
   if (!userId) {
-    console.log({userId})
-    redirect("/sign-in");
+    throw new Error("Unauthorized - userId not found");
   }
 
   // Find or create user in database
@@ -70,7 +69,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   // Ensure user exists (should never happen, but makes TypeScript happy)
   if (!user) {
-    redirect('/sign-in');
+    throw new Error("Failed to create or find user in database");
   }
 
   // Build where clause based on filter

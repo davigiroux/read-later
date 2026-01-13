@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Clock, Target } from 'lucide-react';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth();
+
+  // Redirect authenticated users to dashboard
+  if (userId) {
+    redirect('/dashboard');
+  }
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background via-background to-secondary/30 p-8 relative overflow-hidden">
       {/* Abstract background pattern */}
