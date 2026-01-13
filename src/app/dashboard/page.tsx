@@ -55,21 +55,26 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         },
       });
     } catch (error: unknown) {
-      // User was created by webhook between our check and create attempt
-      // Just query for them again
-      if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
-        user = await db.user.findUnique({
-          where: { clerkId: userId },
-        });
-      } else {
-        throw error;
+      // Log the error for debugging
+      console.error("Error creating user in dashboard:", error);
+
+      // User might have been created by webhook between our check and create attempt
+      // Always try to find the user again regardless of error type
+      user = await db.user.findUnique({
+        where: { clerkId: userId },
+      });
+
+      // If still not found, the error wasn't a race condition
+      if (!user) {
+        console.error("User still not found after retry. Original error:", error);
+        throw new Error(`Failed to create user in database. ClerkId: ${userId}`);
       }
     }
   }
 
-  // Ensure user exists (should never happen, but makes TypeScript happy)
+  // Ensure user exists (should never happen with improved error handling)
   if (!user) {
-    throw new Error("Failed to create or find user in database");
+    throw new Error(`User not found in database after all attempts. ClerkId: ${userId}`);
   }
 
   // Build where clause based on filter
