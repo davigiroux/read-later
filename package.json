@@ -28,6 +28,7 @@
     "@clerk/nextjs": "^6.36.5",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-slot": "^1.2.4",
+    "@vercel/analytics": "^1.6.1",
     "ai": "^6.0.6",
     "cheerio": "^1.1.2",
     "class-variance-authority": "^0.7.1",
