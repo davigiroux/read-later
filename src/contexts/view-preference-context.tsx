@@ -16,7 +16,13 @@ interface ViewPreferenceProviderProps {
 }
 
 export function ViewPreferenceProvider({ children }: ViewPreferenceProviderProps) {
-  const [viewMode, setViewModeState] = useState<ViewMode>('card');
+  // Default to list view on mobile (< 768px), card view on desktop
+  const getDefaultViewMode = (): ViewMode => {
+    if (typeof window === 'undefined') return 'card';
+    return window.innerWidth < 768 ? 'list' : 'card';
+  };
+
+  const [viewMode, setViewModeState] = useState<ViewMode>(getDefaultViewMode());
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Read from localStorage on mount
@@ -25,6 +31,9 @@ export function ViewPreferenceProvider({ children }: ViewPreferenceProviderProps
       const stored = window.localStorage.getItem('read-later:view-preference');
       if (stored) {
         setViewModeState(JSON.parse(stored) as ViewMode);
+      } else {
+        // If no stored preference, set default based on screen size
+        setViewModeState(getDefaultViewMode());
       }
     } catch (error) {
       console.warn('Error reading view preference:', error);
