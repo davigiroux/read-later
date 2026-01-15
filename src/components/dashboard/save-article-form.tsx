@@ -27,8 +27,8 @@ export function SaveArticleForm() {
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           {/* Input with icon prefix and clear button */}
           <div className="flex-1 relative">
             <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -55,7 +55,7 @@ export function SaveArticleForm() {
             type="submit"
             disabled={!url.trim()}
             variant="premium"
-            className="min-w-[140px]"
+            className="w-full sm:w-auto sm:min-w-[140px]"
           >
             <Plus className="h-4 w-4" />
             Stack Article
@@ -64,7 +64,7 @@ export function SaveArticleForm() {
       </form>
 
       {/* Helper text */}
-      <p className="text-sm text-muted-foreground mt-3">
+      <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3">
         Paste any article URL to add it to your stack
       </p>
     </div>

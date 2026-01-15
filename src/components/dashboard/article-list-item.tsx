@@ -38,7 +38,7 @@ export function ArticleListItem({
   return (
     <div
       className={cn(
-        'group relative flex items-center gap-4 p-4 border-b last:border-b-0 transition-all duration-200',
+        'group relative flex flex-col sm:flex-row sm:items-center gap-3 p-3 sm:p-4 border-b last:border-b-0 transition-all duration-200',
         'animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]',
         // Unread state - clean default
         !isRead && !isArchived && [
@@ -63,14 +63,14 @@ export function ArticleListItem({
       }}
     >
       {/* Title and metadata section */}
-      <div className="flex-1 min-w-0 space-y-1">
-        <div className="flex items-start gap-3">
+      <div className="flex-1 min-w-0 space-y-1.5">
+        <div className="flex items-start gap-2 sm:gap-3">
           <a
             href={item.url}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              'text-base font-semibold leading-tight truncate hover:underline transition-colors flex-1',
+              'text-sm sm:text-base font-semibold leading-tight hover:underline transition-colors flex-1 line-clamp-2 sm:truncate',
               !isRead && !isArchived && 'text-foreground',
               isRead && !isArchived && 'text-[oklch(0.42_0.02_165)] dark:text-[oklch(0.72_0.02_165)]',
               isArchived && 'text-[oklch(0.48_0.02_60)] dark:text-[oklch(0.68_0.02_60)]'
@@ -79,9 +79,9 @@ export function ArticleListItem({
             {item.title}
           </a>
 
-          {/* Relevance Score Dots (compact) */}
+          {/* Relevance Score Dots (compact, hidden on small mobile) */}
           {item.relevanceScore > 0 && (
-            <div className="flex items-center gap-0.5 mt-0.5">
+            <div className="hidden xs:flex items-center gap-0.5 mt-0.5 flex-shrink-0">
               {Array.from({ length: 5 }).map((_, i) => {
                 const threshold = (i + 1) * 0.2;
                 const isActive = item.relevanceScore >= threshold;
@@ -103,12 +103,12 @@ export function ArticleListItem({
         </div>
 
         <div className={cn(
-          'flex items-center gap-2 text-xs',
+          'flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs',
           isArchived && 'opacity-60'
         )}>
-          <span className="font-mono text-muted-foreground">{getDomain(item.url)}</span>
+          <span className="font-mono text-muted-foreground text-[11px] sm:text-xs">{getDomain(item.url)}</span>
           <span className="text-muted-foreground/50">•</span>
-          <span className="text-muted-foreground">{formatRelativeTime(item.savedAt)}</span>
+          <span className="text-muted-foreground text-[11px] sm:text-xs">{formatRelativeTime(item.savedAt)}</span>
 
           {/* State badge (inline for list view) */}
           {isRead && !isArchived && (
@@ -155,84 +155,88 @@ export function ArticleListItem({
         </div>
       )}
 
-      {/* Metadata badges */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <Badge
-          size="sm"
-          variant="secondary"
-          className={cn(
-            "transition-colors",
-            isRead && !isArchived && "bg-[oklch(0.94_0.01_165)] dark:bg-[oklch(0.20_0.01_165)] text-[oklch(0.42_0.05_165)] dark:text-[oklch(0.72_0.04_165)]",
-            isArchived && "opacity-60"
-          )}
-        >
-          <Clock className="h-3 w-3" />
-          {item.estimatedTime}m
-        </Badge>
-        {item.relevanceScore > 0 && (
+      {/* Bottom row on mobile, inline on desktop */}
+      <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-2">
+        {/* Metadata badges */}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <Badge
             size="sm"
-            variant={item.relevanceScore >= 0.8 ? 'default' : 'secondary'}
+            variant="secondary"
             className={cn(
+              "transition-colors text-[10px] sm:text-xs",
+              isRead && !isArchived && "bg-[oklch(0.94_0.01_165)] dark:bg-[oklch(0.20_0.01_165)] text-[oklch(0.42_0.05_165)] dark:text-[oklch(0.72_0.04_165)]",
               isArchived && "opacity-60"
             )}
           >
-            {Math.round(item.relevanceScore * 100)}%
+            <Clock className="h-3 w-3" />
+            {item.estimatedTime}m
           </Badge>
-        )}
-      </div>
+          {item.relevanceScore > 0 && (
+            <Badge
+              size="sm"
+              variant={item.relevanceScore >= 0.8 ? 'default' : 'secondary'}
+              className={cn(
+                "text-[10px] sm:text-xs",
+                isArchived && "opacity-60"
+              )}
+            >
+              {Math.round(item.relevanceScore * 100)}%
+            </Badge>
+          )}
+        </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-1 flex-shrink-0">
-        {/* Read/Unread button */}
-        {!item.readAt ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onMarkRead(item.id)}
-            disabled={isPending}
-            title="Mark as read"
-            className="hover:bg-[oklch(0.94_0.015_165)] hover:text-[oklch(0.40_0.06_165)] dark:hover:bg-[oklch(0.22_0.015_165)] dark:hover:text-[oklch(0.75_0.05_165)]"
-          >
-            <Check className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onMarkUnread(item.id)}
-            disabled={isPending}
-            title="Mark as unread"
-            className="text-[oklch(0.45_0.06_165)] hover:bg-[oklch(0.94_0.015_165)] dark:text-[oklch(0.70_0.05_165)] dark:hover:bg-[oklch(0.22_0.015_165)]"
-          >
-            <Undo className="h-4 w-4" />
-          </Button>
-        )}
+        {/* Actions */}
+        <div className="flex items-center gap-0.5 sm:gap-1 flex-shrink-0">
+          {/* Read/Unread button */}
+          {!item.readAt ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onMarkRead(item.id)}
+              disabled={isPending}
+              title="Mark as read"
+              className="h-8 w-8 p-0 hover:bg-[oklch(0.94_0.015_165)] hover:text-[oklch(0.40_0.06_165)] dark:hover:bg-[oklch(0.22_0.015_165)] dark:hover:text-[oklch(0.75_0.05_165)]"
+            >
+              <Check className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onMarkUnread(item.id)}
+              disabled={isPending}
+              title="Mark as unread"
+              className="h-8 w-8 p-0 text-[oklch(0.45_0.06_165)] hover:bg-[oklch(0.94_0.015_165)] dark:text-[oklch(0.70_0.05_165)] dark:hover:bg-[oklch(0.22_0.015_165)]"
+            >
+              <Undo className="h-4 w-4" />
+            </Button>
+          )}
 
-        {/* Archive/Unarchive button */}
-        {!item.archivedAt ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onArchive(item.id)}
-            disabled={isPending}
-            title="Archive"
-            className="hover:bg-[oklch(0.94_0.012_60)] hover:text-[oklch(0.45_0.04_60)] dark:hover:bg-[oklch(0.21_0.015_60)] dark:hover:text-[oklch(0.70_0.03_60)]"
-          >
-            <Archive className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onUnarchive(item.id)}
-            disabled={isPending}
-            title="Unarchive"
-            className="text-[oklch(0.50_0.04_60)] hover:bg-[oklch(0.94_0.012_60)] dark:text-[oklch(0.65_0.03_60)] dark:hover:bg-[oklch(0.21_0.015_60)]"
-          >
-            <ArchiveX className="h-4 w-4" />
-          </Button>
-        )}
+          {/* Archive/Unarchive button */}
+          {!item.archivedAt ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onArchive(item.id)}
+              disabled={isPending}
+              title="Archive"
+              className="h-8 w-8 p-0 hover:bg-[oklch(0.94_0.012_60)] hover:text-[oklch(0.45_0.04_60)] dark:hover:bg-[oklch(0.21_0.015_60)] dark:hover:text-[oklch(0.70_0.03_60)]"
+            >
+              <Archive className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onUnarchive(item.id)}
+              disabled={isPending}
+              title="Unarchive"
+              className="h-8 w-8 p-0 text-[oklch(0.50_0.04_60)] hover:bg-[oklch(0.94_0.012_60)] dark:text-[oklch(0.65_0.03_60)] dark:hover:bg-[oklch(0.21_0.015_60)]"
+            >
+              <ArchiveX className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
