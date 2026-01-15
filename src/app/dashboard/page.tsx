@@ -116,24 +116,24 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     ]);
 
   return (
-    <div className="min-h-screen bg-background p-8 animate-[fade-in_0.4s_ease-out]">
-      <div className="mx-auto max-w-7xl space-y-10">
+    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8 animate-[fade-in_0.4s_ease-out]">
+      <div className="mx-auto max-w-7xl space-y-6 sm:space-y-8 md:space-y-10">
         {/* Header */}
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="mb-2 text-4xl font-bold tracking-tight">
+            <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
               Dashboard
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
               Your reading stack
               {allCount > 0 &&
                 ` · ${allCount} article${allCount !== 1 ? "s" : ""}`}
             </p>
           </div>
-          <Button variant="outline" asChild>
+          <Button variant="outline" size="sm" asChild className="flex-shrink-0">
             <Link href="/settings" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
-              Settings
+              <span className="hidden sm:inline">Settings</span>
             </Link>
           </Button>
         </div>
@@ -142,8 +142,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <ViewPreferenceProvider>
           <OptimisticArticlesProvider initialArticles={savedItems}>
           {/* Save Article Form */}
-          <div className="rounded-xl border bg-card p-8 shadow-sm">
-            <h2 className="mb-4 text-xl font-semibold">
+          <div className="rounded-xl border bg-card p-4 sm:p-6 md:p-8 shadow-sm">
+            <h2 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
               Stack New Article
             </h2>
             <SaveArticleForm />
@@ -151,7 +151,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
           {/* Filter Tabs with View Toggle */}
           {allCount > 0 && (
-            <div className="flex items-center justify-between gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <FilterTabs
                 counts={{
                   all: allCount,
