@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Clock, Target } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
@@ -18,6 +19,14 @@ export default async function Home() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.90_0.004_240_/_0.05)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.90_0.004_240_/_0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
 
       <div className="w-full max-w-4xl text-center relative z-10 animate-[fade-in_0.6s_ease-out]">
+        <Image
+          src="/logo-main-blue.png"
+          alt="LaterStack"
+          width={350}
+          height={350}
+          className="mx-auto mb-6"
+          priority
+        />
         <h1 className="mb-6 text-6xl font-bold tracking-tight leading-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
           Your smart reading queue
         </h1>
