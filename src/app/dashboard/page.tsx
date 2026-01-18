@@ -1,4 +1,5 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import { SaveArticleForm } from "@/components/dashboard/save-article-form";
 import { SavedItemsList } from "@/components/dashboard/saved-items-list";
@@ -11,6 +12,7 @@ import { ViewPreferenceProvider } from "@/contexts/view-preference-context";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata = {
   title: "Dashboard | LaterStack",
@@ -121,21 +123,34 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-              Dashboard
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <Image
+                src="/logo-icon.png"
+                alt="LaterStack"
+                width={36}
+                height={36}
+                className="w-8 h-8 sm:w-9 sm:h-9"
+                unoptimized
+              />
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
+                Dashboard
+              </h1>
+            </div>
             <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
               Your reading stack
               {allCount > 0 &&
                 ` · ${allCount} article${allCount !== 1 ? "s" : ""}`}
             </p>
           </div>
-          <Button variant="outline" size="sm" asChild className="flex-shrink-0">
-            <Link href="/settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              <span className="hidden sm:inline">Settings</span>
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" asChild className="flex-shrink-0">
+              <Link href="/settings" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                <span className="hidden sm:inline">Settings</span>
+              </Link>
+            </Button>
+            <UserButton afterSignOutUrl="/" />
+          </div>
         </div>
 
         {/* Wrap client components in providers */}
