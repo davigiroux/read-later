@@ -1,80 +1,358 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Clock, Target } from 'lucide-react';
+import { Sparkles, Clock, Target, ArrowRight, Check, Github, Twitter, PlayCircle, Plus } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+
+const features = [
+  {
+    icon: Sparkles,
+    title: 'AI-Powered Curation',
+    description: 'Smart relevance scoring helps you focus on articles that matter most to you.',
+  },
+  {
+    icon: Clock,
+    title: 'Time-Aware Reading',
+    description: 'Automatic reading time estimates help you choose articles that fit your schedule.',
+  },
+  {
+    icon: Target,
+    title: 'Personal Goals',
+    description: 'Set reading goals and interests to get tailored article recommendations.',
+  },
+];
+
+// Mock avatar URLs for social proof
+const avatars = [
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=face',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop&crop=face',
+];
 
 export default async function Home() {
   const { userId } = await auth();
 
-  // Redirect authenticated users to dashboard
   if (userId) {
     redirect('/dashboard');
   }
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-background via-background to-secondary/30 p-8 relative overflow-hidden">
-      {/* Abstract background pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,oklch(0.35_0.12_260_/_0.05),transparent_50%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,oklch(0.90_0.004_240_/_0.05)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.90_0.004_240_/_0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Gradient blobs */}
+      <div className="gradient-blob gradient-blob-blue w-[600px] h-[600px] -top-64 -right-64 absolute" />
+      <div className="gradient-blob gradient-blob-purple w-[500px] h-[500px] top-1/2 -left-48 absolute" />
 
-      <div className="w-full max-w-4xl text-center relative z-10 animate-[fade-in_0.6s_ease-out]">
-        <Image
-          src="/logo-main-blue.png"
-          alt="LaterStack"
-          width={350}
-          height={350}
-          className="mx-auto mb-6"
-          priority
-        />
-        <h1 className="mb-6 text-6xl font-bold tracking-tight leading-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-          Your smart reading queue
-        </h1>
-        <p className="mb-12 text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Stack articles, get AI-powered recommendations on what to read next based on your interests and available time.
-        </p>
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-center mb-20">
-          <Button asChild variant="premium" size="lg" className="text-base">
-            <Link href="/dashboard">Get Started</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="text-base">
-            <Link href="/sign-in">Sign In</Link>
-          </Button>
-        </div>
-
-        {/* Feature showcase */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 animate-[fade-in_0.8s_ease-out_0.3s_both]">
-          <div className="p-6 rounded-xl bg-card/50 backdrop-blur-sm border shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4 mx-auto">
-              <Sparkles className="w-6 h-6 text-primary-foreground" />
+      {/* Sticky navbar */}
+      <nav className="sticky top-0 z-50 glass-panel border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="flex items-center gap-2">
+              <Logo size="md" />
+            </Link>
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Features
+              </Link>
+              <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Pricing
+              </Link>
+              <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                About
+              </Link>
             </div>
-            <h3 className="text-lg font-semibold mb-2">AI-Powered Curation</h3>
-            <p className="text-sm text-muted-foreground">
-              Smart relevance scoring helps you focus on articles that matter most to you.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-xl bg-card/50 backdrop-blur-sm border shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4 mx-auto">
-              <Clock className="w-6 h-6 text-primary-foreground" />
+            <div className="flex items-center gap-3">
+              <Button asChild variant="ghost" size="sm">
+                <Link href="/sign-in">Sign In</Link>
+              </Button>
+              <Button asChild variant="primary-blue" size="sm">
+                <Link href="/dashboard">Get Started</Link>
+              </Button>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Time-Aware Reading</h3>
-            <p className="text-sm text-muted-foreground">
-              Automatic reading time estimates help you choose articles that fit your schedule.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-xl bg-card/50 backdrop-blur-sm border shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4 mx-auto">
-              <Target className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Personal Goals</h3>
-            <p className="text-sm text-muted-foreground">
-              Set reading goals and interests to get tailored article recommendations.
-            </p>
           </div>
         </div>
-      </div>
+      </nav>
+
+      {/* Hero section - 2 column grid */}
+      <section className="flex-1 flex items-center pt-12 pb-20 md:py-24 px-4">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Left: Text content */}
+            <div className="space-y-8 text-center lg:text-left animate-[fade-in_0.6s_ease-out]">
+              {/* Animated badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase border border-blue-200 dark:border-blue-800">
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                AI-Powered Curation v2.0
+              </div>
+
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight">
+                Master your
+                <br />
+                <span className="gradient-text">reading list</span>
+                <br />
+                with AI.
+              </h1>
+
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button asChild variant="primary-blue" size="lg" className="text-base gap-2 group">
+                  <Link href="/dashboard">
+                    Start stacking for free
+                    <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="text-base gap-2">
+                  <Link href="/features">
+                    <PlayCircle className="size-4 text-muted-foreground" />
+                    Watch demo
+                  </Link>
+                </Button>
+              </div>
+
+              {/* Social proof with avatar stack */}
+              <div className="pt-6 flex items-center gap-4 justify-center lg:justify-start text-sm text-muted-foreground">
+                <div className="flex -space-x-2">
+                  {avatars.map((avatar, i) => (
+                    <img
+                      key={i}
+                      src={avatar}
+                      alt="User"
+                      className="w-8 h-8 rounded-full border-2 border-background object-cover"
+                    />
+                  ))}
+                </div>
+                <p>Join 10,000+ smart readers</p>
+              </div>
+            </div>
+
+            {/* Right: App preview */}
+            <div className="relative group animate-[slide-up_0.8s_ease-out_0.3s_both]">
+              {/* Glow effect */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-2xl opacity-20 group-hover:opacity-30 transition duration-1000" />
+
+              {/* Browser chrome */}
+              <div className="relative bg-card border rounded-2xl shadow-2xl overflow-hidden">
+                <div className="h-12 border-b bg-muted/50 flex items-center px-4 justify-between">
+                  <div className="flex gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-400" />
+                    <div className="w-3 h-3 rounded-full bg-amber-400" />
+                    <div className="w-3 h-3 rounded-full bg-green-400" />
+                  </div>
+                  <div className="text-xs text-muted-foreground font-mono bg-background/50 px-3 py-1 rounded-md border">
+                    app.laterstack.com/queue
+                  </div>
+                </div>
+
+                {/* Mock queue content */}
+                <div className="p-6">
+                  {/* Queue header */}
+                  <div className="flex justify-between items-center mb-8">
+                    <div>
+                      <h3 className="text-xl font-bold font-display">Your Smart Queue</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Sorted by <span className="text-primary font-medium">Relevance & Impact</span>
+                      </p>
+                    </div>
+                    <div className="text-center px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="text-xs text-muted-foreground mb-0.5">Focus Time</div>
+                      <div className="font-bold text-primary">45m left</div>
+                    </div>
+                  </div>
+
+                  {/* Article cards */}
+                  <div className="space-y-4">
+                    {/* Card 1 - High impact */}
+                    <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/10 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded">
+                              High Impact
+                            </span>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="size-3" /> 8 min read
+                            </span>
+                          </div>
+                          <h4 className="font-semibold leading-snug mb-1">
+                            The Future of Generative AI in Design Systems
+                          </h4>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            An in-depth look at how large language models are reshaping the way we build UI components...
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center bg-background border rounded-lg p-2 w-12 h-12 shadow-sm">
+                          <span className="text-xs font-bold text-muted-foreground">Score</span>
+                          <span className="text-sm font-bold text-primary">98</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 2 - Career */}
+                    <div className="p-4 rounded-xl border bg-card hover:border-muted-foreground/30 transition-colors cursor-pointer">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="bg-muted text-muted-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded">
+                              Career
+                            </span>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="size-3" /> 12 min read
+                            </span>
+                          </div>
+                          <h4 className="font-semibold leading-snug mb-1">
+                            Leadership Principles for Engineering Managers
+                          </h4>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            Key takeaways from top tech leaders on managing distributed teams effectively...
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center bg-muted/50 border rounded-lg p-2 w-12 h-12">
+                          <span className="text-xs font-bold text-muted-foreground">Score</span>
+                          <span className="text-sm font-bold text-muted-foreground">85</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 3 - Tech (faded) */}
+                    <div className="p-4 rounded-xl border bg-card hover:border-muted-foreground/30 transition-colors cursor-pointer opacity-75 hover:opacity-100">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="bg-muted text-muted-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded">
+                              Tech
+                            </span>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="size-3" /> 5 min read
+                            </span>
+                          </div>
+                          <h4 className="font-semibold leading-snug mb-1">
+                            Rust vs Go: 2024 Benchmark
+                          </h4>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            Performance comparison across various server workloads...
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center bg-muted/50 border rounded-lg p-2 w-12 h-12">
+                          <span className="text-xs font-bold text-muted-foreground">Score</span>
+                          <span className="text-sm font-bold text-muted-foreground">72</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* FAB */}
+                  <div className="absolute bottom-6 right-6">
+                    <button className="w-12 h-12 bg-primary text-primary-foreground rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center hover:scale-110 transition-transform">
+                      <Plus className="size-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features section */}
+      <section className="py-24 px-4 bg-muted/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              Everything you need to read smarter
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Powerful features to help you save, organize, and discover content that matters.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="group p-8 rounded-2xl bg-card border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                  <feature.icon className="size-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA section */}
+      <section className="py-24 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+            Ready to transform your reading?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Join thousands of readers who&apos;ve already upgraded their reading experience.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild variant="primary-blue" size="lg" className="text-base gap-2">
+              <Link href="/dashboard">
+                Get started for free
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground mt-4 flex items-center justify-center gap-2">
+            <Check className="size-4 text-green-500" />
+            No credit card required
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <Logo size="sm" textClassName="text-muted-foreground" iconClassName="text-muted-foreground" />
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/features" className="hover:text-foreground transition-colors">
+                Features
+              </Link>
+              <Link href="/pricing" className="hover:text-foreground transition-colors">
+                Pricing
+              </Link>
+              <Link href="/about" className="hover:text-foreground transition-colors">
+                About
+              </Link>
+            </div>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://twitter.com/devgiroux"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Twitter className="size-5" />
+              </a>
+              <a
+                href="https://github.com/davigiroux"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Github className="size-5" />
+              </a>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
+            © {new Date().getFullYear()} LaterStack. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
