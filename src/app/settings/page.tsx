@@ -1,7 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
+import { UserButton } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import { ProfileSettingsForm } from "@/components/dashboard/profile-settings-form";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,9 +42,22 @@ export default async function SettingsPage() {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-            Settings
-          </h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 mb-2">
+              <Image
+                src="/logo-icon.png"
+                alt="LaterStack"
+                width={36}
+                height={36}
+                className="w-8 h-8"
+                unoptimized
+              />
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+                Settings
+              </h1>
+            </div>
+            <UserButton afterSignOutUrl="/" />
+          </div>
           <p className="text-zinc-600 dark:text-zinc-400">
             Customize your reading preferences to get better recommendations for your stack
           </p>
