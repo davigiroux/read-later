@@ -1,7 +1,7 @@
 'use client';
 
 import { useOptimistic, useTransition } from 'react';
-import { ExternalLink, Clock, Check, Undo, Archive, ArchiveX } from 'lucide-react';
+import { ExternalLink, Clock, Check, Archive } from 'lucide-react';
 import {
   Card,
   CardContent,

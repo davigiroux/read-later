@@ -1,6 +1,6 @@
 'use client';
 
-import { ExternalLink, Clock, Check, Undo, Archive, ArchiveX } from 'lucide-react';
+import { ExternalLink, Clock, Check, Undo, Archive, ArchiveX, Play, TrendingUp } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ScoreBadge } from './score-badge';
 import { cn } from '@/lib/utils';
 import { formatRelativeTime, getDomain } from '@/lib/article-utils';
 import type { SavedItem } from '@/contexts/optimistic-articles-context';
@@ -23,6 +24,8 @@ interface ArticleCardProps {
   onArchive: (id: string) => void;
   onUnarchive: (id: string) => void;
   isPending: boolean;
+  showScore?: boolean;
+  isPriority?: boolean;
 }
 
 /**
@@ -37,20 +40,27 @@ export function ArticleCard({
   onArchive,
   onUnarchive,
   isPending,
+  showScore = true,
+  isPriority = false,
 }: ArticleCardProps) {
   const isRead = !!item.readAt;
   const isArchived = !!item.archivedAt;
+  const isHighImpact = item.relevanceScore >= 0.9;
 
   return (
     <Card
       key={item.id}
       elevation="interactive"
+      accentBar={isPriority && !isRead && !isArchived}
+      accentColor="primary"
       className={cn(
         'flex flex-col relative overflow-hidden',
         // Stagger animation on load
         'animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]',
         // Unread state (default) - clean and sophisticated
         !isRead && !isArchived && 'bg-card border-border',
+        // Priority item highlight
+        isPriority && !isRead && !isArchived && 'border-primary/30 bg-primary/[0.02]',
         // Read state - cool sage accent with refined feel
         isRead && !isArchived && [
           'bg-[oklch(0.96_0.02_165)] dark:bg-[oklch(0.20_0.015_165)]',
@@ -85,44 +95,40 @@ export function ArticleCard({
       )}
 
       <CardHeader>
-        <div className="flex items-start gap-2">
-          <CardTitle className={cn(
-            'line-clamp-2 text-2xl font-semibold leading-tight transition-colors flex-1',
-            isRead && !isArchived && 'text-[oklch(0.40_0.01_165)] dark:text-[oklch(0.75_0.01_165)]',
-            isArchived && 'text-[oklch(0.45_0.015_60)] dark:text-[oklch(0.70_0.015_60)]'
-          )}>
-            {item.title}
-          </CardTitle>
-          {/* Relevance Score Dots */}
-          {item.relevanceScore > 0 && (
-            <div className="flex items-center gap-0.5 mt-1">
-              {Array.from({ length: 5 }).map((_, i) => {
-                const threshold = (i + 1) * 0.2;
-                const isActive = item.relevanceScore >= threshold;
-                const isHighRelevance = item.relevanceScore >= 0.8;
-                return (
-                  <div
-                    key={i}
-                    className={cn(
-                      'w-1.5 h-1.5 rounded-full transition-all duration-200',
-                      isActive && isHighRelevance && 'bg-gradient-to-r from-[oklch(0.60_0.12_75)] to-[oklch(0.58_0.14_65)] shadow-sm',
-                      isActive && !isHighRelevance && 'bg-muted-foreground/60',
-                      !isActive && 'bg-border'
-                    )}
-                  />
-                );
-              })}
-            </div>
+        <div className="flex items-start gap-3">
+          <div className="flex-1 min-w-0">
+            {/* High Impact Badge */}
+            {isHighImpact && !isRead && !isArchived && (
+              <Badge variant="high-impact" size="xs" className="mb-2">
+                <TrendingUp className="size-3" />
+                High Impact
+              </Badge>
+            )}
+            <CardTitle className={cn(
+              'line-clamp-2 text-xl font-semibold leading-tight transition-colors',
+              isRead && !isArchived && 'text-[oklch(0.40_0.01_165)] dark:text-[oklch(0.75_0.01_165)]',
+              isArchived && 'text-[oklch(0.45_0.015_60)] dark:text-[oklch(0.70_0.015_60)]'
+            )}>
+              {item.title}
+            </CardTitle>
+            <CardDescription className={cn(
+              'flex items-center gap-2 mt-2',
+              isArchived && 'opacity-60'
+            )}>
+              <span className="truncate font-mono text-xs">{getDomain(item.url)}</span>
+              <span className="text-muted-foreground/50">•</span>
+              <span className="text-xs">{formatRelativeTime(item.savedAt)}</span>
+            </CardDescription>
+          </div>
+          {/* Score Badge on right */}
+          {showScore && item.relevanceScore > 0 && !isArchived && (
+            <ScoreBadge
+              score={Math.round(item.relevanceScore * 100)}
+              size="md"
+              className="flex-shrink-0"
+            />
           )}
         </div>
-        <CardDescription className={cn(
-          'flex items-center gap-2 mt-1',
-          isArchived && 'opacity-60'
-        )}>
-          <span className="truncate font-mono text-xs">{getDomain(item.url)}</span>
-          <span className="text-muted-foreground/50">•</span>
-          <span className="text-xs">{formatRelativeTime(item.savedAt)}</span>
-        </CardDescription>
       </CardHeader>
 
       <CardContent className="flex-1 space-y-4">
@@ -179,6 +185,23 @@ export function ArticleCard({
       </CardContent>
 
       <CardFooter className="flex gap-2">
+        {/* Play/Start Reading Button */}
+        <Button
+          variant="primary-blue"
+          size="sm"
+          className="gap-2"
+          asChild
+        >
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Play className="size-4 fill-current" />
+            Read
+          </a>
+        </Button>
+
         <Button
           variant="outline"
           size="sm"
@@ -195,7 +218,7 @@ export function ArticleCard({
             rel="noopener noreferrer"
             className="flex items-center gap-2"
           >
-            Read Article
+            Open
             <ExternalLink className="h-4 w-4" />
           </a>
         </Button>

@@ -1,17 +1,10 @@
 import { SignUp } from '@clerk/nextjs';
-import Image from 'next/image';
+import { Logo } from '@/components/ui/logo';
 
 export default function SignUpPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950">
-      <Image
-        src="/logo-main-blue.png"
-        alt="LaterStack"
-        width={220}
-        height={220}
-        className="mb-8"
-        priority
-      />
+      <Logo size="lg" className="mb-8 scale-125" />
       <SignUp />
     </div>
   );

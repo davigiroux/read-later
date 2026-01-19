@@ -1,5 +1,4 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { UserButton } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import { SaveArticleForm } from "@/components/dashboard/save-article-form";
 import { SavedItemsList } from "@/components/dashboard/saved-items-list";
@@ -7,12 +6,14 @@ import { GroupedItemsDisplay } from "@/components/dashboard/grouped-items-displa
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { FilterTabs } from "@/components/dashboard/filter-tabs";
 import { ViewToggle } from "@/components/dashboard/view-toggle";
+import { FocusTimer } from "@/components/dashboard/focus-timer";
 import { OptimisticArticlesProvider } from "@/contexts/optimistic-articles-context";
 import { ViewPreferenceProvider } from "@/contexts/view-preference-context";
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { PageHeader } from "@/components/layout";
+import { FAB } from "@/components/ui/fab";
+import { Badge } from "@/components/ui/badge";
+import { Cloud, Plus, TrendingUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
   title: "Dashboard | LaterStack",
@@ -28,17 +29,14 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const filter = params.filter || 'all';
   const { userId } = await auth();
 
-  // Middleware ensures userId is always present on protected routes
   if (!userId) {
     throw new Error("Unauthorized - userId not found");
   }
 
-  // Find or create user in database
   let user = await db.user.findUnique({
     where: { clerkId: userId },
   });
 
-  // Create user if not found (handles webhook race condition)
   if (!user) {
     try {
       const client = await clerkClient();
@@ -57,16 +55,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         },
       });
     } catch (error: unknown) {
-      // Log the error for debugging
       console.error("Error creating user in dashboard:", error);
-
-      // User might have been created by webhook between our check and create attempt
-      // Always try to find the user again regardless of error type
       user = await db.user.findUnique({
         where: { clerkId: userId },
       });
 
-      // If still not found, the error wasn't a race condition
       if (!user) {
         console.error("User still not found after retry. Original error:", error);
         throw new Error(`Failed to create user in database. ClerkId: ${userId}`);
@@ -74,12 +67,10 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     }
   }
 
-  // Ensure user exists (should never happen with improved error handling)
   if (!user) {
     throw new Error(`User not found in database after all attempts. ClerkId: ${userId}`);
   }
 
-  // Build where clause based on filter
   const baseWhere = { userId: user.id };
   const whereClause = {
     ...baseWhere,
@@ -87,10 +78,8 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     ...(filter === 'read' && { readAt: { not: null }, archivedAt: null }),
     ...(filter === 'archived' && { archivedAt: { not: null } }),
     ...(filter === 'quick-read' && { estimatedTime: { lt: 5 }, archivedAt: null }),
-    // 'all' filter = no additional filters beyond userId
   };
 
-  // Fetch filtered items
   const savedItems = await db.savedItem.findMany({
     where: whereClause,
     orderBy: [
@@ -100,14 +89,17 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     take: 50,
   });
 
-  // Group items by status for "all" view
   const groupedItems = filter === 'all' ? {
     unread: savedItems.filter((item: { readAt: Date | null; archivedAt: Date | null }) => !item.readAt && !item.archivedAt),
     read: savedItems.filter((item: { readAt: Date | null; archivedAt: Date | null }) => item.readAt && !item.archivedAt),
     archived: savedItems.filter((item: { archivedAt: Date | null }) => item.archivedAt),
   } : null;
 
-  // Calculate counts for all filters (parallel queries for performance)
+  // Get priority items (top 3 unread by relevance)
+  const priorityItems = savedItems
+    .filter((item: { readAt: Date | null; archivedAt: Date | null }) => !item.readAt && !item.archivedAt)
+    .slice(0, 3);
+
   const [allCount, unreadCount, readCount, archivedCount, quickReadCount] =
     await Promise.all([
       db.savedItem.count({ where: baseWhere }),
@@ -118,84 +110,114 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     ]);
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8 animate-[fade-in_0.4s_ease-out]">
-      <div className="mx-auto max-w-7xl space-y-6 sm:space-y-8 md:space-y-10">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Image
-                src="/logo-icon.png"
-                alt="LaterStack"
-                width={36}
-                height={36}
-                className="w-8 h-8 sm:w-9 sm:h-9"
-                unoptimized
-              />
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-                Dashboard
-              </h1>
+    <div className="min-h-full bg-background animate-[fade-in_0.4s_ease-out]">
+      <div className="max-w-6xl mx-auto p-6 lg:p-8 space-y-8">
+        {/* Header with search and focus timer */}
+        <PageHeader
+          title="Dashboard"
+          subtitle={allCount > 0 ? `${allCount} article${allCount !== 1 ? "s" : ""} in your queue` : "Your reading queue is empty"}
+          focusTimer={<FocusTimer timeLeft="45m left" progress={75} />}
+          actions={
+            <div className="flex items-center gap-2">
+              {/* Sync status indicator */}
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Cloud className="size-4 text-green-500" />
+                <span className="hidden sm:inline">Synced</span>
+              </div>
             </div>
-            <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
-              Your reading stack
-              {allCount > 0 &&
-                ` · ${allCount} article${allCount !== 1 ? "s" : ""}`}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild className="flex-shrink-0">
-              <Link href="/settings" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">Settings</span>
-              </Link>
-            </Button>
-            <UserButton afterSignOutUrl="/" />
-          </div>
-        </div>
+          }
+        />
 
-        {/* Wrap client components in providers */}
         <ViewPreferenceProvider>
           <OptimisticArticlesProvider initialArticles={savedItems}>
-          {/* Save Article Form */}
-          <div className="rounded-xl border bg-card p-4 sm:p-6 md:p-8 shadow-sm">
-            <h2 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
-              Stack New Article
-            </h2>
-            <SaveArticleForm />
-          </div>
-
-          {/* Filter Tabs with View Toggle */}
-          {allCount > 0 && (
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <FilterTabs
-                counts={{
-                  all: allCount,
-                  unread: unreadCount,
-                  read: readCount,
-                  archived: archivedCount,
-                  quickRead: quickReadCount,
-                }}
-              />
-              <ViewToggle />
+            {/* Save Article Form */}
+            <div className="rounded-xl border bg-card p-6 shadow-sm">
+              <h2 className="mb-4 text-lg font-semibold">Stack New Article</h2>
+              <SaveArticleForm />
             </div>
-          )}
 
-          {/* Saved Articles or Empty State */}
-          {savedItems.length > 0 ? (
-            filter === 'all' && groupedItems ? (
-              <GroupedItemsDisplay
-                unread={groupedItems.unread}
-                read={groupedItems.read}
-                archived={groupedItems.archived}
-              />
+            {/* Today's Priorities Section */}
+            {priorityItems.length > 0 && filter === 'all' && (
+              <section className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-semibold font-display">Today&apos;s Priorities</h2>
+                  <Badge variant="high-impact" size="xs">
+                    <TrendingUp className="size-3" />
+                    AI Picked
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {priorityItems.map((item: { id: string; title: string; url: string; estimatedTime: number; relevanceScore: number }, index: number) => (
+                    <a
+                      key={item.id}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        "block p-4 rounded-xl border bg-card",
+                        "hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200",
+                        index === 0 && "border-l-4 border-l-primary"
+                      )}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium line-clamp-2 text-sm">{item.title}</p>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {item.estimatedTime} min read
+                          </p>
+                        </div>
+                        <div className={cn(
+                          "flex-shrink-0 text-xs font-bold px-2 py-1 rounded",
+                          item.relevanceScore >= 0.9
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
+                        )}>
+                          {Math.round(item.relevanceScore * 100)}
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Filter Tabs with View Toggle */}
+            {allCount > 0 && (
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <FilterTabs
+                  counts={{
+                    all: allCount,
+                    unread: unreadCount,
+                    read: readCount,
+                    archived: archivedCount,
+                    quickRead: quickReadCount,
+                  }}
+                />
+                <ViewToggle />
+              </div>
+            )}
+
+            {/* Saved Articles or Empty State */}
+            {savedItems.length > 0 ? (
+              filter === 'all' && groupedItems ? (
+                <GroupedItemsDisplay
+                  unread={groupedItems.unread}
+                  read={groupedItems.read}
+                  archived={groupedItems.archived}
+                />
+              ) : (
+                <SavedItemsList />
+              )
             ) : (
-              <SavedItemsList />
-            )
-          ) : (
-            <EmptyState />
-          )}
+              <EmptyState />
+            )}
           </OptimisticArticlesProvider>
         </ViewPreferenceProvider>
+      </div>
+
+      {/* FAB for adding articles on mobile */}
+      <div className="lg:hidden">
+        <FAB icon={<Plus className="size-6" />} />
       </div>
     </div>
   );

@@ -17,6 +17,12 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        "high-impact":
+          "border-transparent bg-[oklch(0.95_0.04_262)] text-[oklch(0.42_0.20_262)] dark:bg-[oklch(0.25_0.06_262)] dark:text-[oklch(0.70_0.16_262)] font-medium",
+        category:
+          "border-transparent bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+        score:
+          "border-transparent bg-primary text-primary-foreground font-semibold",
         "relevance-high":
           "border-transparent bg-gradient-to-r from-[oklch(0.60_0.12_75)] to-[oklch(0.58_0.14_65)] text-white shadow-sm [a&]:hover:shadow-md",
         "relevance-medium":

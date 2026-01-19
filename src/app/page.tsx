@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Clock, Target, ArrowRight, Check, Github, Twitter, PlayCircle, Plus } from 'lucide-react';
-import { Logo } from '@/components/ui/logo';
+import { Sparkles, Clock, Target, ArrowRight, Check, PlayCircle, Plus } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { MarketingNavbar } from '@/components/marketing/navbar';
+import { MarketingFooter } from '@/components/marketing/footer';
 
 const features = [
   {
@@ -43,35 +44,7 @@ export default async function Home() {
       <div className="gradient-blob gradient-blob-blue w-[600px] h-[600px] -top-64 -right-64 absolute" />
       <div className="gradient-blob gradient-blob-purple w-[500px] h-[500px] top-1/2 -left-48 absolute" />
 
-      {/* Sticky navbar */}
-      <nav className="sticky top-0 z-50 glass-panel border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <Logo size="md" />
-            </Link>
-            <div className="hidden md:flex items-center gap-8">
-              <Link href="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Features
-              </Link>
-              <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Pricing
-              </Link>
-              <Link href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                About
-              </Link>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/sign-in">Sign In</Link>
-              </Button>
-              <Button asChild variant="primary-blue" size="sm">
-                <Link href="/dashboard">Get Started</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <MarketingNavbar />
 
       {/* Hero section - 2 column grid */}
       <section className="flex-1 flex items-center pt-12 pb-20 md:py-24 px-4">
@@ -129,9 +102,9 @@ export default async function Home() {
             </div>
 
             {/* Right: App preview */}
-            <div className="relative group animate-[slide-up_0.8s_ease-out_0.3s_both]">
+            <div className="relative animate-[slide-up_0.8s_ease-out_0.3s_both]">
               {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-2xl opacity-20 group-hover:opacity-30 transition duration-1000" />
+              <div className="absolute -inset-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur-2xl opacity-20" />
 
               {/* Browser chrome */}
               <div className="relative bg-card border rounded-2xl shadow-2xl overflow-hidden">
@@ -142,7 +115,7 @@ export default async function Home() {
                     <div className="w-3 h-3 rounded-full bg-green-400" />
                   </div>
                   <div className="text-xs text-muted-foreground font-mono bg-background/50 px-3 py-1 rounded-md border">
-                    app.laterstack.com/queue
+                    laterstack.com/dashboard
                   </div>
                 </div>
 
@@ -165,7 +138,7 @@ export default async function Home() {
                   {/* Article cards */}
                   <div className="space-y-4">
                     {/* Card 1 - High impact */}
-                    <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/10 hover:shadow-md transition-shadow cursor-pointer relative overflow-hidden">
+                    <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/10 relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary" />
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
@@ -192,7 +165,7 @@ export default async function Home() {
                     </div>
 
                     {/* Card 2 - Career */}
-                    <div className="p-4 rounded-xl border bg-card hover:border-muted-foreground/30 transition-colors cursor-pointer">
+                    <div className="p-4 rounded-xl border bg-card">
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -218,7 +191,7 @@ export default async function Home() {
                     </div>
 
                     {/* Card 3 - Tech (faded) */}
-                    <div className="p-4 rounded-xl border bg-card hover:border-muted-foreground/30 transition-colors cursor-pointer opacity-75 hover:opacity-100">
+                    <div className="p-4 rounded-xl border bg-card opacity-75">
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
@@ -246,9 +219,9 @@ export default async function Home() {
 
                   {/* FAB */}
                   <div className="absolute bottom-6 right-6">
-                    <button className="w-12 h-12 bg-primary text-primary-foreground rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center">
                       <Plus className="size-5" />
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -313,46 +286,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <Logo size="sm" textClassName="text-muted-foreground" iconClassName="text-muted-foreground" />
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/features" className="hover:text-foreground transition-colors">
-                Features
-              </Link>
-              <Link href="/pricing" className="hover:text-foreground transition-colors">
-                Pricing
-              </Link>
-              <Link href="/about" className="hover:text-foreground transition-colors">
-                About
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <a
-                href="https://twitter.com/devgiroux"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Twitter className="size-5" />
-              </a>
-              <a
-                href="https://github.com/davigiroux"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Github className="size-5" />
-              </a>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} LaterStack. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }
