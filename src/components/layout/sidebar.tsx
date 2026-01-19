@@ -11,10 +11,10 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Layers,
 } from "lucide-react"
 import { UserButton } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
+import { Logo } from "@/components/ui/logo"
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -43,13 +43,8 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
     >
       {/* Logo header */}
       <div className="h-16 flex items-center justify-between px-4 border-b">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <Layers className="size-7 text-primary flex-shrink-0" />
-          {!collapsed && (
-            <span className="font-display font-bold text-lg tracking-tight">
-              LaterStack
-            </span>
-          )}
+        <Link href="/dashboard">
+          <Logo showText={!collapsed} size="md" />
         </Link>
         {onToggle && (
           <button
