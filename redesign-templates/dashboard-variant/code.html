@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LaterStack - Smart Reading Queue</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2563eb","primary-light": "#eff6ff","surface": "#ffffff",
+                        "surface-alt": "#f8fafc","border-subtle": "#e2e8f0","text-main": "#0f172a","text-muted": "#64748b","text-faint": "#94a3b8",},
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
+                        'glow': '0 0 15px rgba(37, 99, 235, 0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Space Grotesk", "Noto Sans", sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-surface-alt text-text-main h-screen overflow-hidden flex font-display selection:bg-primary selection:text-white">
+<aside class="w-72 h-full flex flex-col bg-surface border-r border-border-subtle flex-shrink-0 z-20">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+<span class="material-symbols-outlined text-xl">layers</span>
+</div>
+<h1 class="text-text-main text-xl font-bold tracking-tight">LaterStack</h1>
+</div>
+<p class="text-text-muted text-xs font-normal mt-1 ml-11">Smart Queue v2.0</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-8">
+<nav class="flex flex-col gap-1.5">
+<p class="px-3 text-text-faint text-xs font-bold uppercase tracking-wider mb-2">Library</p>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-light text-primary border border-blue-100 font-medium group transition-all" href="#">
+<span class="material-symbols-outlined fill-1">list</span>
+<span class="text-sm">Smart Queue</span>
+<span class="ml-auto text-xs font-bold bg-white text-primary border border-blue-100 px-2 py-0.5 rounded-full shadow-sm">8</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-slate-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Archive</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-muted hover:bg-slate-50 hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-sm font-medium">Discover</span>
+</a>
+</nav>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between px-3">
+<p class="text-text-faint text-xs font-bold uppercase tracking-wider">User Goals</p>
+<span class="material-symbols-outlined text-text-faint text-sm cursor-pointer hover:text-primary transition-colors">edit</span>
+</div>
+<div class="bg-slate-50 rounded-lg p-3 border border-slate-100">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-lg">target</span>
+<span class="text-text-main text-sm font-semibold">Learn Rust</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 45%"></div>
+</div>
+<p class="text-text-muted text-xs mt-1.5 text-right font-medium">3 articles left</p>
+</div>
+<div class="bg-slate-50 rounded-lg p-3 border border-slate-100">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-purple-500 text-lg">target</span>
+<span class="text-text-main text-sm font-semibold">AI UX Patterns</span>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-1.5">
+<div class="bg-purple-500 h-1.5 rounded-full" style="width: 70%"></div>
+</div>
+<p class="text-text-muted text-xs mt-1.5 text-right font-medium">1 article left</p>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-border-subtle bg-surface">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-text-main transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<div class="flex items-center gap-3 px-3 py-3 mt-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors border border-transparent hover:border-slate-100">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md">JD</div>
+<div class="flex flex-col">
+<span class="text-text-main text-sm font-semibold leading-none">John Doe</span>
+<span class="text-text-muted text-xs leading-none mt-1">Pro Member</span>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden relative bg-surface-alt">
+<header class="flex-shrink-0 h-20 px-8 flex items-center justify-between border-b border-border-subtle bg-surface/80 backdrop-blur-md sticky top-0 z-10">
+<div class="flex-1 max-w-xl">
+<label class="relative flex items-center w-full group">
+<span class="absolute left-4 text-text-muted group-focus-within:text-primary transition-colors material-symbols-outlined">search</span>
+<input class="w-full h-11 bg-slate-100 hover:bg-white focus:bg-white border border-transparent hover:border-border-subtle focus:border-primary/30 rounded-xl pl-12 pr-4 text-text-main placeholder-text-muted focus:ring-4 focus:ring-primary/5 focus:outline-none transition-all text-sm shadow-sm" placeholder="Search your library..." type="text"/>
+<div class="absolute right-3 px-2 py-1 bg-white rounded text-[10px] text-text-muted font-mono border border-slate-200 shadow-sm">⌘K</div>
+</label>
+</div>
+<div class="flex items-center gap-4 ml-8">
+<button class="relative p-2 text-text-muted hover:text-primary hover:bg-blue-50 rounded-lg transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+</button>
+<button class="flex items-center justify-center gap-2 h-11 px-5 bg-primary hover:bg-blue-700 text-white text-sm font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">add_link</span>
+<span>Add Link</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-5xl mx-auto flex flex-col gap-8 pb-10">
+<div class="flex flex-col gap-6">
+<div class="flex items-end justify-between">
+<div>
+<h2 class="text-text-main text-3xl font-bold tracking-tight mb-2">Smart Queue</h2>
+<p class="text-text-muted text-sm">AI-prioritized based on your goal: <span class="text-primary font-semibold bg-blue-50 px-2 py-0.5 rounded">"Mastering System Design"</span></p>
+</div>
+<div class="flex items-center gap-1 bg-white p-1 rounded-lg border border-border-subtle shadow-sm">
+<button class="px-3 py-1.5 rounded bg-slate-100 text-text-main text-xs font-semibold shadow-sm border border-slate-200">Priority</button>
+<button class="px-3 py-1.5 rounded text-text-muted hover:text-text-main hover:bg-slate-50 text-xs font-medium transition-colors">Newest</button>
+<button class="px-3 py-1.5 rounded text-text-muted hover:text-text-main hover:bg-slate-50 text-xs font-medium transition-colors">Shortest</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-3 bg-white border border-border-subtle rounded-xl p-6 flex items-center justify-between shadow-soft">
+<div class="flex flex-col gap-1">
+<p class="text-text-faint text-xs font-bold uppercase tracking-wider">Queue Health</p>
+<div class="flex items-baseline gap-2">
+<span class="text-text-main text-3xl font-bold">92<span class="text-xl text-text-muted">/100</span></span>
+<span class="text-green-600 bg-green-50 px-1.5 rounded text-xs font-bold flex items-center border border-green-100">
+<span class="material-symbols-outlined text-sm">trending_up</span> +5%
+                                </span>
+</div>
+<p class="text-text-muted text-sm mt-1">High quality content focused on your goals.</p>
+</div>
+<div class="flex-1 max-w-sm ml-8 border-l border-border-subtle pl-8">
+<div class="flex justify-between text-xs text-text-muted mb-2 font-medium">
+<span>Priority Distribution</span>
+<span>8 Items Total</span>
+</div>
+<div class="flex h-3 w-full overflow-hidden rounded-full bg-slate-100">
+<div class="h-full bg-primary" style="width: 60%"></div> 
+<div class="h-full bg-purple-500" style="width: 25%"></div> 
+<div class="h-full bg-slate-400" style="width: 15%"></div> 
+</div>
+<div class="flex justify-between mt-2 text-[10px] text-text-muted font-medium">
+<span class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-primary"></div> High</span>
+<span class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Med</span>
+<span class="flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div> Low</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 flex flex-col justify-between text-white shadow-lg shadow-blue-500/20">
+<div class="flex items-start justify-between">
+<span class="material-symbols-outlined opacity-80">timer</span>
+<span class="text-xs font-bold bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded text-white border border-white/10">Today</span>
+</div>
+<div>
+<p class="text-3xl font-bold mt-2">25 <span class="text-lg font-medium opacity-70">min</span></p>
+<p class="text-sm opacity-90 font-medium">Estimated read time</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="group relative flex flex-col sm:flex-row items-stretch gap-0 sm:gap-6 bg-white border border-border-subtle rounded-xl p-4 hover:border-primary/40 transition-all hover:shadow-soft overflow-hidden">
+<div class="w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 bg-cover bg-center rounded-lg relative overflow-hidden border border-border-subtle" data-alt="Abstract neural network visualization with blue glowing nodes" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB9PN1BV8mkbu3fopnw__85buq2H7SZ3MJ8l_SkHmmC0KvoQDUqvjcgA-GsVl_pQSGgJhSOF1H2mfoclAhWrHAVaSivpgsu5xHf6nah8Sv6UQzdXnHkP2-OzMcvlqMoS2cdPsJqimphKayoKsjDScBT6k9KL30QZFhReQww8lbhioU3Essl-yK_dAr5kcRRMLtku5RE1oEkCKKdcoXtMSZ7-yYRIn-kmuJTy89Axj7qIk5bqkYA_DlhvF3_ok-YNyVG_raLBnczAjxf");'>
+</div>
+<div class="flex flex-col justify-center flex-1 py-1 min-w-0">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-xs font-bold text-primary bg-blue-50 px-2 py-0.5 rounded border border-blue-100">AI &amp; ML</span>
+<span class="text-xs text-text-muted flex items-center gap-1 font-medium">
+<span class="w-1 h-1 bg-text-muted rounded-full"></span>
+                                Arxiv.org
+                            </span>
+</div>
+<h3 class="text-text-main text-lg font-bold leading-tight mb-2 truncate group-hover:text-primary transition-colors">Understanding Large Language Models: A Deep Dive</h3>
+<p class="text-text-muted text-sm line-clamp-2 mb-3">An comprehensive overview of transformer architectures and attention mechanisms in modern LLMs.</p>
+<div class="flex items-center gap-4 text-xs font-medium text-text-faint">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">schedule</span> 15 min read</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Added 2h ago</span>
+</div>
+</div>
+<div class="flex flex-row sm:flex-col items-center sm:justify-center justify-between border-t sm:border-t-0 sm:border-l border-border-subtle pt-4 sm:pt-0 pl-0 sm:pl-6 gap-4 min-w-[100px]">
+<div class="flex flex-col items-center text-center">
+<div class="relative flex items-center justify-center w-12 h-12">
+<svg class="w-full h-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary drop-shadow-sm" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="98, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-sm font-bold text-text-main">98</span>
+</div>
+<span class="text-[10px] text-primary mt-1 font-bold bg-blue-50 px-1.5 py-0.5 rounded">Top Match</span>
+</div>
+<button class="bg-slate-50 hover:bg-primary border border-border-subtle hover:border-primary text-text-muted hover:text-white p-2 rounded-lg transition-all shadow-sm group/btn" title="Mark as Read">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:fill-1">check</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row items-stretch gap-0 sm:gap-6 bg-white border border-border-subtle rounded-xl p-4 hover:border-primary/40 transition-all hover:shadow-soft overflow-hidden">
+<div class="w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 bg-cover bg-center rounded-lg relative overflow-hidden border border-border-subtle" data-alt="React JS logo focused concept abstract background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAX91wdb4_mqAgytLISy3MkhOXG8gucjGOpGRg7h9BZqjhAIod1lSxPxVX6EaIYppnKzNwFtQoaHv_K2wDuz4yld04R3ekoj6jqetEyoA1KqQKrsU2yakKhIfBK1nL_n5BI1D9D4HoFLbjNKur0bJR2rq3AuDi_-nL_O_-y2pP8DJms5pfMleC6LY8glBA5o-sp46uNkyk8-olDA2HRBglrjfwvKf7oLyfXZb4avaBt0oE2bJSPWbSe1GapAm8YRVIwmfJTuyvk9wDE");'>
+</div>
+<div class="flex flex-col justify-center flex-1 py-1 min-w-0">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-xs font-bold text-sky-600 bg-sky-50 px-2 py-0.5 rounded border border-sky-100">Engineering</span>
+<span class="text-xs text-text-muted flex items-center gap-1 font-medium">
+<span class="w-1 h-1 bg-text-muted rounded-full"></span>
+                                Vercel Blog
+                            </span>
+</div>
+<h3 class="text-text-main text-lg font-bold leading-tight mb-2 truncate group-hover:text-primary transition-colors">The Future of React Server Components</h3>
+<p class="text-text-muted text-sm line-clamp-2 mb-3">How RSCs are changing the way we build web applications and handle data fetching.</p>
+<div class="flex items-center gap-4 text-xs font-medium text-text-faint">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">schedule</span> 6 min read</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Added 5h ago</span>
+</div>
+</div>
+<div class="flex flex-row sm:flex-col items-center sm:justify-center justify-between border-t sm:border-t-0 sm:border-l border-border-subtle pt-4 sm:pt-0 pl-0 sm:pl-6 gap-4 min-w-[100px]">
+<div class="flex flex-col items-center text-center">
+<div class="relative flex items-center justify-center w-12 h-12">
+<svg class="w-full h-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-sky-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="92, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-sm font-bold text-text-main">92</span>
+</div>
+<span class="text-[10px] text-text-muted mt-1 font-bold">High</span>
+</div>
+<button class="bg-slate-50 hover:bg-primary border border-border-subtle hover:border-primary text-text-muted hover:text-white p-2 rounded-lg transition-all shadow-sm group/btn" title="Mark as Read">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:fill-1">check</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row items-stretch gap-0 sm:gap-6 bg-white border border-border-subtle rounded-xl p-4 hover:border-primary/40 transition-all hover:shadow-soft overflow-hidden">
+<div class="w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 bg-cover bg-center rounded-lg relative overflow-hidden border border-border-subtle" data-alt="Wireframes on a wall showing UI design process" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCkuqaiNdhm7Ubtx1isXLxT_9xKZcIju7wc8e_CQRpXwQIR5qAjymosWzfjSS_CgtJi0lfQXdx99_8WmNR3Zyh5jr5llwJ2qfIGdUwgUNzMy5nqjiQWlPLImjaNuZgyyIJ5DN0fGAU8USL80a4ovNc2nou3BD9tRhu5eCWSJ9Ik7KIfXJfDK1vUz9nlP9ftv0srVLUwnU7dNUNG2RASPU2e0atYVbOoK13EouYo8dRCYWNqumpEWALdKdJGWC9ODpLfxp-UgiHGVeXQ");'>
+</div>
+<div class="flex flex-col justify-center flex-1 py-1 min-w-0">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded border border-purple-100">Design</span>
+<span class="text-xs text-text-muted flex items-center gap-1 font-medium">
+<span class="w-1 h-1 bg-text-muted rounded-full"></span>
+                                Smashing Mag
+                            </span>
+</div>
+<h3 class="text-text-main text-lg font-bold leading-tight mb-2 truncate group-hover:text-primary transition-colors">UX Patterns for AI Dashboards</h3>
+<p class="text-text-muted text-sm line-clamp-2 mb-3">Best practices for displaying confidence scores, loading states, and generative content.</p>
+<div class="flex items-center gap-4 text-xs font-medium text-text-faint">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">schedule</span> 8 min read</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Added 1d ago</span>
+</div>
+</div>
+<div class="flex flex-row sm:flex-col items-center sm:justify-center justify-between border-t sm:border-t-0 sm:border-l border-border-subtle pt-4 sm:pt-0 pl-0 sm:pl-6 gap-4 min-w-[100px]">
+<div class="flex flex-col items-center text-center">
+<div class="relative flex items-center justify-center w-12 h-12">
+<svg class="w-full h-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-purple-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="85, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-sm font-bold text-text-main">85</span>
+</div>
+<span class="text-[10px] text-text-muted mt-1 font-bold">Strong</span>
+</div>
+<button class="bg-slate-50 hover:bg-primary border border-border-subtle hover:border-primary text-text-muted hover:text-white p-2 rounded-lg transition-all shadow-sm group/btn" title="Mark as Read">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:fill-1">check</span>
+</button>
+</div>
+</div>
+<div class="group relative flex flex-col sm:flex-row items-stretch gap-0 sm:gap-6 bg-white border border-border-subtle rounded-xl p-4 hover:border-primary/40 transition-all hover:shadow-soft overflow-hidden">
+<div class="w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 bg-cover bg-center rounded-lg relative overflow-hidden border border-border-subtle" data-alt="Financial stock market candle charts on a screen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDXnl_tO9Nvrv2OWY6NuOMrQ_lObRjM0ESSpLsmlIL-bBnSIjrn-hEbV9BkkJhMLTFtARAIo34rzDZoh1Vfnqv-1peIsUzdDJBTDFdu7uX_bASraksG0rMJs_ucDGPUY-D8IzcdYAvgkarFGBpLX56g2iv8SDN_-0I5X1XEZH3VtXkjQenquG0lxoAhHWqzclm5JbCWpfJGPQTckTQafEeGhsuOxuvMm30zR1wbpVl6V9XgFheauzkUvhicS6ytBcB46WvGP20gs7g-");'>
+</div>
+<div class="flex flex-col justify-center flex-1 py-1 min-w-0">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">Finance</span>
+<span class="text-xs text-text-muted flex items-center gap-1 font-medium">
+<span class="w-1 h-1 bg-text-muted rounded-full"></span>
+                                Bloomberg
+                            </span>
+</div>
+<h3 class="text-text-main text-lg font-bold leading-tight mb-2 truncate group-hover:text-primary transition-colors">Q3 Financial Report Analysis: Tech Sector</h3>
+<p class="text-text-muted text-sm line-clamp-2 mb-3">Breakdown of earnings reports from major tech giants and market implications.</p>
+<div class="flex items-center gap-4 text-xs font-medium text-text-faint">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">schedule</span> 4 min read</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Added 2d ago</span>
+</div>
+</div>
+<div class="flex flex-row sm:flex-col items-center sm:justify-center justify-between border-t sm:border-t-0 sm:border-l border-border-subtle pt-4 sm:pt-0 pl-0 sm:pl-6 gap-4 min-w-[100px]">
+<div class="flex flex-col items-center text-center">
+<div class="relative flex items-center justify-center w-12 h-12">
+<svg class="w-full h-full rotate-[-90deg]" viewBox="0 0 36 36">
+<path class="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-slate-400" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="74, 100" stroke-width="3"></path>
+</svg>
+<span class="absolute text-sm font-bold text-text-main">74</span>
+</div>
+<span class="text-[10px] text-text-muted mt-1 font-bold">Relevant</span>
+</div>
+<button class="bg-slate-50 hover:bg-primary border border-border-subtle hover:border-primary text-text-muted hover:text-white p-2 rounded-lg transition-all shadow-sm group/btn" title="Mark as Read">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:fill-1">check</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

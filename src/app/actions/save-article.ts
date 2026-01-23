@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { extractArticleContent } from '@/lib/scraper';
 import { analyzeArticle } from '@/lib/ai-analyzer';
+import { fetchOGMetadata, extractDomain } from '@/lib/og-metadata';
 
 // Validation schema for URL input
 const SaveArticleSchema = z.object({
@@ -28,6 +29,9 @@ export interface SaveArticleResult {
     reasoning: string;
     readAt: Date | null;
     archivedAt: Date | null;
+    imageUrl: string | null;
+    description: string | null;
+    sourceDomain: string | null;
   };
   error?: string;
 }
@@ -113,8 +117,11 @@ export async function saveArticle(
       };
     }
 
-    // 5. Extract article content using Jina AI Reader
-    const article = await extractArticleContent(validatedUrl);
+    // 5. Extract article content and OG metadata in parallel
+    const [article, ogMetadata] = await Promise.all([
+      extractArticleContent(validatedUrl),
+      fetchOGMetadata(validatedUrl),
+    ]);
 
     // 6. Calculate estimated reading time
     const estimatedTime = Math.max(
@@ -129,7 +136,7 @@ export async function saveArticle(
       user.goals
     );
 
-    // 8. Save to database
+    // 8. Save to database with OG metadata
     const savedItem = await db.savedItem.create({
       data: {
         userId: user.id,
@@ -140,6 +147,9 @@ export async function saveArticle(
         topics: analysis.topics,
         relevanceScore: analysis.relevanceScore,
         reasoning: analysis.reasoning,
+        imageUrl: ogMetadata.image,
+        description: ogMetadata.description,
+        sourceDomain: ogMetadata.domain || extractDomain(validatedUrl),
       },
     });
 
@@ -160,6 +170,9 @@ export async function saveArticle(
         reasoning: savedItem.reasoning,
         readAt: savedItem.readAt,
         archivedAt: savedItem.archivedAt,
+        imageUrl: savedItem.imageUrl,
+        description: savedItem.description,
+        sourceDomain: savedItem.sourceDomain,
       },
     };
   } catch (error) {

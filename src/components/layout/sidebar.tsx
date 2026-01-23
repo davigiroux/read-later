@@ -3,25 +3,22 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useUser } from "@clerk/nextjs"
 import {
-  LayoutDashboard,
-  Bookmark,
-  Sparkles,
-  BarChart3,
+  List,
+  Archive,
+  Compass,
   Settings,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import { UserButton } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/ui/logo"
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/bookmarks", label: "Bookmarks", icon: Bookmark },
-  { href: "/dashboard/ai-picks", label: "AI Picks", icon: Sparkles },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/dashboard", label: "Smart Queue", icon: List, exactMatch: true },
+  { href: "/dashboard/archive", label: "Archive", icon: Archive },
+  { href: "/dashboard/discover", label: "Discover", icon: Compass },
 ]
 
 interface SidebarProps {
@@ -32,108 +29,134 @@ interface SidebarProps {
 
 function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
   const pathname = usePathname()
+  const { user } = useUser()
+
+  // Get user initials for avatar
+  const userInitials = React.useMemo(() => {
+    if (!user) return 'U'
+    const first = user.firstName?.charAt(0) || ''
+    const last = user.lastName?.charAt(0) || ''
+    return (first + last).toUpperCase() || user.emailAddresses[0]?.emailAddress?.charAt(0).toUpperCase() || 'U'
+  }, [user])
+
+  const userName = user?.fullName || user?.firstName || 'User'
 
   return (
     <aside
       className={cn(
-        "h-full flex flex-col bg-card border-r transition-all duration-300",
-        collapsed ? "w-20" : "w-64",
+        "h-full flex flex-col bg-white border-r border-slate-200 transition-all duration-300",
+        collapsed ? "w-20" : "w-72",
         className
       )}
     >
       {/* Logo header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b">
-        <Link href="/dashboard">
+      <div className="p-6">
+        <Link href="/dashboard" className="flex items-center gap-3">
           <Logo showText={!collapsed} size="md" />
         </Link>
-        {onToggle && (
-          <button
-            onClick={onToggle}
-            className={cn(
-              "size-8 flex items-center justify-center rounded-md",
-              "hover:bg-accent transition-colors",
-              collapsed && "mx-auto"
-            )}
-          >
-            {collapsed ? (
-              <ChevronRight className="size-4" />
-            ) : (
-              <ChevronLeft className="size-4" />
-            )}
-          </button>
+        {!collapsed && (
+          <p className="text-slate-400 text-xs font-normal mt-1 ml-11">Smart Queue v2.0</p>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-4 px-3">
-        <ul className="space-y-1">
+      <nav className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-8">
+        <div className="flex flex-col gap-1.5">
+          {!collapsed && (
+            <p className="px-3 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+              Library
+            </p>
+          )}
           {navItems.map((item) => {
-            const isActive = pathname === item.href ||
-              (item.href !== "/dashboard" && pathname.startsWith(item.href))
+            const isActive = item.exactMatch
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(item.href + '/')
 
             return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg",
-                    "transition-all duration-200 relative",
-                    "hover:bg-accent group",
-                    isActive && "bg-primary/10 text-primary",
-                    collapsed && "justify-center px-0"
-                  )}
-                >
-                  {/* Active indicator bar */}
-                  {isActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full" />
-                  )}
-                  <item.icon
-                    className={cn(
-                      "size-5 flex-shrink-0",
-                      isActive
-                        ? "text-primary"
-                        : "text-muted-foreground group-hover:text-foreground"
-                    )}
-                  />
-                  {!collapsed && (
-                    <span
-                      className={cn(
-                        "text-sm font-medium",
-                        isActive
-                          ? "text-primary"
-                          : "text-muted-foreground group-hover:text-foreground"
-                      )}
-                    >
-                      {item.label}
-                    </span>
-                  )}
-                </Link>
-              </li>
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group",
+                  isActive
+                    ? "bg-blue-50 text-primary border border-blue-100 font-medium"
+                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900",
+                  collapsed && "justify-center px-0"
+                )}
+              >
+                <item.icon className={cn(
+                  "size-5 flex-shrink-0",
+                  isActive && "fill-primary/20"
+                )} />
+                {!collapsed && (
+                  <span className="text-sm">{item.label}</span>
+                )}
+              </Link>
             )
           })}
-        </ul>
+        </div>
+
+        {/* Collapse toggle */}
+        {onToggle && (
+          <button
+            onClick={onToggle}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2 rounded-lg",
+              "text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors",
+              collapsed && "justify-center px-0"
+            )}
+          >
+            {collapsed ? (
+              <ChevronRight className="size-5" />
+            ) : (
+              <>
+                <ChevronLeft className="size-5" />
+                <span className="text-sm">Collapse</span>
+              </>
+            )}
+          </button>
+        )}
       </nav>
 
-      {/* User profile section */}
-      <div
-        className={cn(
-          "p-4 border-t",
-          collapsed ? "flex justify-center" : "flex items-center gap-3"
-        )}
-      >
-        <UserButton
-          appearance={{
-            elements: {
-              avatarBox: "size-9",
-            },
-          }}
-        />
-        {!collapsed && (
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">Account</p>
-            <p className="text-xs text-muted-foreground">Manage profile</p>
+      {/* Bottom section: Settings + Profile */}
+      <div className="p-4 border-t border-slate-200 bg-white">
+        {/* Settings link */}
+        <Link
+          href="/settings"
+          className={cn(
+            "flex items-center gap-3 px-3 py-2 rounded-lg",
+            "text-slate-500 hover:text-slate-900 transition-colors",
+            collapsed && "justify-center px-0"
+          )}
+        >
+          <Settings className="size-5" />
+          {!collapsed && <span className="text-sm font-medium">Settings</span>}
+        </Link>
+
+        {/* User profile */}
+        <div
+          className={cn(
+            "flex items-center gap-3 px-3 py-3 mt-2 rounded-lg",
+            "hover:bg-slate-50 cursor-pointer transition-colors",
+            "border border-transparent hover:border-slate-100",
+            collapsed && "justify-center px-0"
+          )}
+        >
+          {/* Gradient avatar */}
+          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0">
+            {userInitials}
           </div>
-        )}
+          {!collapsed && (
+            <div className="flex flex-col min-w-0">
+              <span className="text-slate-900 text-sm font-semibold leading-none truncate">
+                {userName}
+              </span>
+              <span className="text-slate-400 text-xs leading-none mt-1">
+                Pro Member
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   )

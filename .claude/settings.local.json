@@ -33,7 +33,10 @@
       "Bash(convert:*)",
       "Bash(ls:*)",
       "Bash(git diff:*)",
-      "Bash(gh pr create:*)"
+      "Bash(gh pr create:*)",
+      "Bash(npx tsc:*)",
+      "mcp__plugin_playwright_playwright__browser_type",
+      "mcp__plugin_playwright_playwright__browser_snapshot"
     ]
   }
 }
