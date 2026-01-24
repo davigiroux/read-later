@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
+import { useUser, useClerk } from "@clerk/nextjs"
 import {
   List,
   Archive,
@@ -11,9 +11,17 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/ui/logo"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const navItems = [
   { href: "/dashboard", label: "Smart Queue", icon: List, exactMatch: true },
@@ -30,6 +38,7 @@ interface SidebarProps {
 function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
   const pathname = usePathname()
   const { user } = useUser()
+  const { signOut } = useClerk()
 
   // Get user initials for avatar
   const userInitials = React.useMemo(() => {
@@ -133,30 +142,50 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
           {!collapsed && <span className="text-sm font-medium">Settings</span>}
         </Link>
 
-        {/* User profile */}
-        <div
-          className={cn(
-            "flex items-center gap-3 px-3 py-3 mt-2 rounded-lg",
-            "hover:bg-slate-50 cursor-pointer transition-colors",
-            "border border-transparent hover:border-slate-100",
-            collapsed && "justify-center px-0"
-          )}
-        >
-          {/* Gradient avatar */}
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md flex-shrink-0">
-            {userInitials}
-          </div>
-          {!collapsed && (
-            <div className="flex flex-col min-w-0">
-              <span className="text-slate-900 text-sm font-semibold leading-none truncate">
-                {userName}
-              </span>
-              <span className="text-slate-400 text-xs leading-none mt-1">
-                Pro Member
-              </span>
-            </div>
-          )}
-        </div>
+        {/* User profile dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={cn(
+                "flex items-center gap-3 px-3 py-3 mt-2 rounded-lg w-full",
+                "hover:bg-slate-50 cursor-pointer transition-colors",
+                "border border-transparent hover:border-slate-100",
+                collapsed && "justify-center px-0"
+              )}
+            >
+              {/* Gradient avatar */}
+              <div className="w-8 h-8 rounded-full bg-linear-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold shadow-md shrink-0">
+                {userInitials}
+              </div>
+              {!collapsed && (
+                <div className="flex flex-col min-w-0 text-left">
+                  <span className="text-slate-900 text-sm font-semibold leading-none truncate">
+                    {userName}
+                  </span>
+                  <span className="text-slate-400 text-xs leading-none mt-1">
+                    Pro Member
+                  </span>
+                </div>
+              )}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side={collapsed ? "right" : "top"} align="start" className="w-56">
+            <DropdownMenuItem asChild>
+              <Link href="/settings" className="flex items-center gap-2">
+                <Settings className="size-4" />
+                Settings
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => signOut({ redirectUrl: '/' })}
+              className="text-red-600 focus:text-red-600 focus:bg-red-50"
+            >
+              <LogOut className="size-4 mr-2" />
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   )
