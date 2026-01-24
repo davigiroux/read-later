@@ -37,6 +37,11 @@ model SavedItem {
   content         String    @db.Text
   estimatedTime   Int       // minutes to read
 
+  // OG Metadata
+  imageUrl        String?   // og:image
+  description     String?   @db.Text // og:description
+  sourceDomain    String?   // extracted domain (e.g. "vercel.com")
+
   // AI Analysis
   topics          String[]
   relevanceScore  Float     @default(0)

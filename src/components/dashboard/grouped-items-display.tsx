@@ -4,19 +4,7 @@ import { useState } from 'react';
 import { SavedItemsList } from './saved-items-list';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-
-interface SavedItem {
-  id: string;
-  url: string;
-  title: string;
-  estimatedTime: number;
-  savedAt: Date;
-  topics: string[];
-  relevanceScore: number;
-  reasoning: string;
-  readAt: Date | null;
-  archivedAt: Date | null;
-}
+import type { SavedItem } from '@/contexts/optimistic-articles-context';
 
 interface GroupedItemsDisplayProps {
   unread: SavedItem[];

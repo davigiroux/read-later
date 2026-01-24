@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LaterStack - Smart Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1d4ed8", // Vibrant blue from landing page
+                        "primary-hover": "#1e40af",
+                        "primary-soft": "#eff6ff", // Very light blue for backgrounds
+                        "text-main": "#0f172a", // Slate 900
+                        "text-body": "#334155", // Slate 700
+                        "text-muted": "#64748b", // Slate 500
+                        "border-light": "#f1f5f9", // Slate 100
+                        "border-medium": "#e2e8f0", // Slate 200
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        display: ["Space Grotesk", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+<style>::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-white text-text-main font-sans antialiased h-screen flex overflow-hidden selection:bg-primary selection:text-white">
+<aside class="w-20 lg:w-64 bg-white border-r border-border-light flex flex-col justify-between shrink-0 transition-all duration-300 z-20">
+<div>
+<div class="h-20 flex items-center justify-center lg:justify-start lg:px-6">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-icons-round text-3xl">layers</span>
+<span class="font-display font-bold text-xl tracking-tight hidden lg:block text-text-main">LaterStack</span>
+</div>
+</div>
+<nav class="p-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 bg-primary-soft text-primary rounded-xl transition-all group relative" href="#">
+<span class="material-icons-round text-2xl">dashboard</span>
+<span class="font-semibold hidden lg:block">Smart Queue</span>
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-l-full hidden lg:block"></div>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-text-muted hover:bg-slate-50 hover:text-text-main rounded-xl transition-colors group" href="#">
+<span class="material-icons-round text-2xl">bookmarks</span>
+<span class="font-medium hidden lg:block">Library</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-text-muted hover:bg-slate-50 hover:text-text-main rounded-xl transition-colors group" href="#">
+<span class="material-icons-round text-2xl">auto_awesome</span>
+<span class="font-medium hidden lg:block">Discover</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-text-muted hover:bg-slate-50 hover:text-text-main rounded-xl transition-colors group" href="#">
+<span class="material-icons-round text-2xl">analytics</span>
+<span class="font-medium hidden lg:block">Insights</span>
+</a>
+</nav>
+</div>
+<div class="p-3 border-t border-border-light">
+<a class="flex items-center gap-3 px-3 py-3 text-text-muted hover:bg-slate-50 hover:text-text-main rounded-xl transition-colors mb-2" href="#">
+<span class="material-icons-round text-2xl">settings</span>
+<span class="font-medium hidden lg:block">Settings</span>
+</a>
+<div class="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer">
+<div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
+<img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm6kg_zbLTagHkx4s6Sqkq7Rf5OPr08Vj92gWWFsyacirAYCf0X9MTxbaxuhjdr_pDprQGQCp1lDHfFvPZ6UcUEzNztCHh2Smy1JVoLEXhOafxdJR3f9v08w_C_9soNAmfiqvYV_booF04CqfSnKC8oeNl3YYur2Eaap0UkLe2GmXy6N9-a0STDeR5hUIqOzWQ8GnQWo2JdrM7mZRMmpESJmls3NGAt89qx0Sks_jDvil7bwLhVNY6Yf6b02zjh6lov2LqbJviS-sX"/>
+</div>
+<div class="hidden lg:block overflow-hidden">
+<p class="text-sm font-bold text-text-main truncate">Jane Doe</p>
+<p class="text-xs text-text-muted truncate">Premium Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0 bg-white relative">
+<header class="h-20 px-6 md:px-10 flex items-center justify-between border-b border-border-light bg-white/90 backdrop-blur-md sticky top-0 z-10">
+<div>
+<h1 class="text-2xl font-display font-bold text-text-main">Your Smart Queue</h1>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-sm text-text-muted">Sorted by</span>
+<button class="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover transition-colors">
+                        Relevance &amp; Impact
+                        <span class="material-icons-round text-base">expand_more</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border-light bg-slate-50">
+<span class="material-icons-round text-slate-400 text-lg">search</span>
+<input class="bg-transparent border-none text-sm text-text-main placeholder-slate-400 focus:ring-0 p-0 w-32 lg:w-48" placeholder="Search articles..." type="text"/>
+<span class="text-xs text-slate-400 border border-slate-200 rounded px-1.5 py-0.5">⌘K</span>
+</div>
+<div class="flex items-center gap-3 pl-8 border-l border-border-light h-10">
+<div class="text-right">
+<p class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Focus Time</p>
+<p class="text-lg font-bold text-primary leading-none">45m left</p>
+</div>
+<div class="relative w-10 h-10 rounded-full bg-primary-soft flex items-center justify-center text-primary">
+<svg class="w-full h-full absolute top-0 left-0 transform -rotate-90" viewBox="0 0 36 36">
+<path class="text-blue-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="2.5"></path>
+</svg>
+<span class="material-icons-round text-xl">timer</span>
+</div>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto bg-white p-6 md:p-10 scroll-smooth">
+<div class="max-w-4xl mx-auto space-y-6">
+<div class="flex items-center justify-between pb-2">
+<h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Today's Priorities</h2>
+<div class="flex gap-2">
+<button class="p-1 text-slate-400 hover:text-primary transition-colors"><span class="material-icons-round">refresh</span></button>
+<button class="p-1 text-slate-400 hover:text-primary transition-colors"><span class="material-icons-round">filter_list</span></button>
+</div>
+</div>
+<article class="group relative bg-primary-soft/40 border border-blue-200 rounded-2xl p-1 transition-all hover:shadow-lg hover:border-blue-300 cursor-pointer">
+<div class="absolute left-0 top-6 bottom-6 w-1 bg-primary rounded-r-full"></div>
+<div class="flex flex-col sm:flex-row gap-5 p-5 items-start sm:items-center">
+<div class="flex-1 pl-4">
+<div class="flex flex-wrap items-center gap-3 mb-2">
+<span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">High Impact</span>
+<span class="flex items-center gap-1 text-xs font-medium text-slate-500">
+<span class="material-icons-round text-sm text-slate-400">schedule</span> 8 min read
+                                </span>
+<span class="flex items-center gap-1 text-xs font-medium text-slate-500">
+<span class="material-icons-round text-sm text-slate-400">trending_up</span> Trending
+                                </span>
+</div>
+<h3 class="text-xl font-bold text-text-main mb-1.5 group-hover:text-primary transition-colors">The Future of Generative AI in Design Systems</h3>
+<p class="text-sm text-text-body line-clamp-1">An in-depth look at how large language models are reshaping the way we build UI components...</p>
+</div>
+<div class="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-end pl-4 sm:pl-0 border-t sm:border-t-0 border-blue-100 sm:border-l sm:border-blue-200 pt-4 sm:pt-0 sm:ml-2">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-white border border-blue-100 rounded-xl shadow-sm sm:ml-4">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Score</span>
+<span class="text-lg font-bold text-primary font-display">98</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white shadow-md shadow-blue-500/20 hover:bg-primary-hover hover:scale-105 transition-all">
+<span class="material-icons-round">play_arrow</span>
+</button>
+</div>
+</div>
+</article>
+<article class="group relative bg-white border border-border-medium rounded-2xl p-1 transition-all hover:border-slate-300 hover:shadow-md cursor-pointer">
+<div class="flex flex-col sm:flex-row gap-5 p-5 items-start sm:items-center">
+<div class="flex-1 pl-1">
+<div class="flex flex-wrap items-center gap-3 mb-2">
+<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">Career</span>
+<span class="flex items-center gap-1 text-xs font-medium text-slate-500">
+<span class="material-icons-round text-sm text-slate-400">schedule</span> 12 min read
+                                </span>
+</div>
+<h3 class="text-lg font-bold text-text-main mb-1.5 group-hover:text-primary transition-colors">Leadership Principles for Engineering Managers</h3>
+<p class="text-sm text-text-muted line-clamp-1">Key takeaways from top tech leaders on managing distributed teams effectively.</p>
+</div>
+<div class="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-50 sm:border-l sm:border-slate-100 pt-4 sm:pt-0 sm:ml-2">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-slate-50 border border-slate-100 rounded-xl sm:ml-4">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Score</span>
+<span class="text-lg font-bold text-slate-600 font-display">85</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-300 hover:text-primary hover:bg-primary-soft transition-all">
+<span class="material-icons-round">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<article class="group relative bg-white border border-border-medium rounded-2xl p-1 transition-all hover:border-slate-300 hover:shadow-md cursor-pointer">
+<div class="flex flex-col sm:flex-row gap-5 p-5 items-start sm:items-center">
+<div class="flex-1 pl-1">
+<div class="flex flex-wrap items-center gap-3 mb-2">
+<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">Tech</span>
+<span class="flex items-center gap-1 text-xs font-medium text-slate-500">
+<span class="material-icons-round text-sm text-slate-400">schedule</span> 5 min read
+                                </span>
+</div>
+<h3 class="text-lg font-bold text-text-main mb-1.5 group-hover:text-primary transition-colors">Rust vs Go: 2024 Benchmark</h3>
+<p class="text-sm text-text-muted line-clamp-1">Performance comparison across various server workloads and latency checks.</p>
+</div>
+<div class="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-50 sm:border-l sm:border-slate-100 pt-4 sm:pt-0 sm:ml-2">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-slate-50 border border-slate-100 rounded-xl sm:ml-4">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Score</span>
+<span class="text-lg font-bold text-slate-600 font-display">72</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-300 hover:text-primary hover:bg-primary-soft transition-all">
+<span class="material-icons-round">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<article class="group relative bg-white border border-border-medium rounded-2xl p-1 transition-all hover:border-slate-300 hover:shadow-md cursor-pointer opacity-80 hover:opacity-100">
+<div class="flex flex-col sm:flex-row gap-5 p-5 items-start sm:items-center">
+<div class="flex-1 pl-1">
+<div class="flex flex-wrap items-center gap-3 mb-2">
+<span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide">Product</span>
+<span class="flex items-center gap-1 text-xs font-medium text-slate-500">
+<span class="material-icons-round text-sm text-slate-400">schedule</span> 15 min read
+                                </span>
+</div>
+<h3 class="text-lg font-bold text-text-main mb-1.5 group-hover:text-primary transition-colors">Principles of Viral Growth Loops</h3>
+<p class="text-sm text-text-muted line-clamp-1">Deconstructing how Dropbox and Slack achieved massive scale.</p>
+</div>
+<div class="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 border-slate-50 sm:border-l sm:border-slate-100 pt-4 sm:pt-0 sm:ml-2">
+<div class="flex flex-col items-center justify-center w-14 h-14 bg-slate-50 border border-slate-100 rounded-xl sm:ml-4">
+<span class="text-[10px] font-bold text-slate-400 uppercase">Score</span>
+<span class="text-lg font-bold text-slate-600 font-display">64</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-300 hover:text-primary hover:bg-primary-soft transition-all">
+<span class="material-icons-round">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<div class="pt-8 pb-12 text-center">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-100 text-slate-400 text-sm">
+<span class="w-2 h-2 rounded-full bg-green-400"></span>
+                        Queue synchronized just now
+                    </div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-8 right-8 z-30">
+<button class="group w-14 h-14 bg-primary text-white rounded-full shadow-lg shadow-blue-500/40 flex items-center justify-center hover:bg-primary-hover hover:scale-105 transition-all duration-300">
+<span class="material-icons-round text-3xl group-hover:rotate-90 transition-transform duration-300">add</span>
+</button>
+</div>
+</main>
+
+</body></html>

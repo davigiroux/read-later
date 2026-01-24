@@ -1,255 +1,196 @@
 'use client';
 
-import { ExternalLink, Clock, Check, Undo, Archive, ArchiveX } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Clock, Calendar, Check } from 'lucide-react';
+import { ScoreBadge, getCategoryColor } from './score-badge';
 import { cn } from '@/lib/utils';
-import { formatRelativeTime, getDomain } from '@/lib/article-utils';
 import type { SavedItem } from '@/contexts/optimistic-articles-context';
 
 interface ArticleCardProps {
   item: SavedItem;
   index?: number;
-  onMarkRead: (id: string) => void;
-  onMarkUnread: (id: string) => void;
-  onArchive: (id: string) => void;
-  onUnarchive: (id: string) => void;
-  isPending: boolean;
+  onMarkAsRead?: (id: string) => void;
 }
 
 /**
- * Card component for displaying a saved article with all metadata and actions
- * Supports read/unread and archived states with distinct visual styling
+ * Format relative time (e.g., "2h ago", "1d ago")
+ */
+function formatRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+}
+
+/**
+ * Get gradient background for image placeholder based on topic
+ */
+function getPlaceholderGradient(topic: string): string {
+  const topicLower = topic.toLowerCase();
+
+  if (topicLower.includes('ai') || topicLower.includes('ml')) {
+    return 'bg-gradient-to-br from-blue-400 to-blue-600';
+  }
+  if (topicLower.includes('engineering') || topicLower.includes('code')) {
+    return 'bg-gradient-to-br from-sky-400 to-sky-600';
+  }
+  if (topicLower.includes('design') || topicLower.includes('ux')) {
+    return 'bg-gradient-to-br from-purple-400 to-purple-600';
+  }
+  if (topicLower.includes('career') || topicLower.includes('work')) {
+    return 'bg-gradient-to-br from-amber-400 to-amber-600';
+  }
+  if (topicLower.includes('finance') || topicLower.includes('money')) {
+    return 'bg-gradient-to-br from-slate-400 to-slate-600';
+  }
+  if (topicLower.includes('product') || topicLower.includes('business')) {
+    return 'bg-gradient-to-br from-green-400 to-green-600';
+  }
+  return 'bg-gradient-to-br from-slate-300 to-slate-500';
+}
+
+/**
+ * Redesigned horizontal article card with image thumbnail and circular score
  */
 export function ArticleCard({
   item,
   index = 0,
-  onMarkRead,
-  onMarkUnread,
-  onArchive,
-  onUnarchive,
-  isPending,
+  onMarkAsRead,
 }: ArticleCardProps) {
-  const isRead = !!item.readAt;
-  const isArchived = !!item.archivedAt;
+  const primaryTopic = item.topics[0] || 'Article';
+  const categoryColors = getCategoryColor(primaryTopic);
+  const score = Math.round(item.relevanceScore * 100);
 
   return (
-    <Card
-      key={item.id}
-      elevation="interactive"
+    <article
       className={cn(
-        'flex flex-col relative overflow-hidden',
-        // Stagger animation on load
-        'animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]',
-        // Unread state (default) - clean and sophisticated
-        !isRead && !isArchived && 'bg-card border-border',
-        // Read state - cool sage accent with refined feel
-        isRead && !isArchived && [
-          'bg-[oklch(0.96_0.02_165)] dark:bg-[oklch(0.20_0.015_165)]',
-          'border-l-4 border-l-[oklch(0.58_0.08_165)]',
-          'border-t border-r border-b border-[oklch(0.88_0.02_165)] dark:border-[oklch(0.25_0.02_165)]',
-        ],
-        // Archived state - cool sepia with filed-away feel
-        isArchived && [
-          'bg-[oklch(0.96_0.015_60)] dark:bg-[oklch(0.19_0.015_60)]',
-          'border-2 border-dashed border-[oklch(0.85_0.02_60)] dark:border-[oklch(0.28_0.02_60)]',
-          'opacity-85',
-        ]
+        'group relative flex flex-col sm:flex-row items-stretch gap-0 sm:gap-6',
+        'bg-white border border-slate-200 rounded-xl p-4',
+        'hover:border-primary/40 transition-all hover:shadow-md overflow-hidden',
+        'animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]'
       )}
-      style={{
-        animationDelay: `${index * 50}ms`,
-      }}
+      style={{ animationDelay: `${index * 50}ms` }}
     >
-      {/* State indicator badge */}
-      {isRead && !isArchived && (
-        <div className="absolute top-3 right-3 z-10">
-          <div className="px-2 py-0.5 text-[10px] font-semibold tracking-wider bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 dark:border-emerald-500/30 rounded-sm backdrop-blur-sm">
-            READ
+      {/* Image thumbnail */}
+      <div
+        className={cn(
+          'w-full sm:w-48 h-32 sm:h-auto flex-shrink-0 rounded-lg overflow-hidden',
+          'border border-slate-200 relative',
+          !item.imageUrl && getPlaceholderGradient(primaryTopic)
+        )}
+      >
+        {item.imageUrl ? (
+          <img
+            src={item.imageUrl}
+            alt=""
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Hide broken image, show gradient instead
+              (e.target as HTMLImageElement).style.display = 'none';
+              (e.target as HTMLImageElement).parentElement!.classList.add(
+                getPlaceholderGradient(primaryTopic)
+              );
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center opacity-30">
+            <span className="text-white text-4xl font-bold">
+              {primaryTopic.charAt(0).toUpperCase()}
+            </span>
           </div>
-        </div>
-      )}
-      {isArchived && (
-        <div className="absolute top-3 right-3 z-10">
-          <div className="px-2 py-0.5 text-[10px] font-semibold tracking-wider bg-amber-500/10 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/20 dark:border-amber-500/30 rounded-sm backdrop-blur-sm">
-            ARCHIVED
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      <CardHeader>
-        <div className="flex items-start gap-2">
-          <CardTitle className={cn(
-            'line-clamp-2 text-2xl font-semibold leading-tight transition-colors flex-1',
-            isRead && !isArchived && 'text-[oklch(0.40_0.01_165)] dark:text-[oklch(0.75_0.01_165)]',
-            isArchived && 'text-[oklch(0.45_0.015_60)] dark:text-[oklch(0.70_0.015_60)]'
-          )}>
-            {item.title}
-          </CardTitle>
-          {/* Relevance Score Dots */}
-          {item.relevanceScore > 0 && (
-            <div className="flex items-center gap-0.5 mt-1">
-              {Array.from({ length: 5 }).map((_, i) => {
-                const threshold = (i + 1) * 0.2;
-                const isActive = item.relevanceScore >= threshold;
-                const isHighRelevance = item.relevanceScore >= 0.8;
-                return (
-                  <div
-                    key={i}
-                    className={cn(
-                      'w-1.5 h-1.5 rounded-full transition-all duration-200',
-                      isActive && isHighRelevance && 'bg-gradient-to-r from-[oklch(0.60_0.12_75)] to-[oklch(0.58_0.14_65)] shadow-sm',
-                      isActive && !isHighRelevance && 'bg-muted-foreground/60',
-                      !isActive && 'bg-border'
-                    )}
-                  />
-                );
-              })}
-            </div>
-          )}
-        </div>
-        <CardDescription className={cn(
-          'flex items-center gap-2 mt-1',
-          isArchived && 'opacity-60'
-        )}>
-          <span className="truncate font-mono text-xs">{getDomain(item.url)}</span>
-          <span className="text-muted-foreground/50">•</span>
-          <span className="text-xs">{formatRelativeTime(item.savedAt)}</span>
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="flex-1 space-y-4">
-        {/* Reading time */}
-        <div className="flex items-center gap-2">
-          <Badge
-            size="sm"
-            variant="secondary"
+      {/* Content section */}
+      <div className="flex flex-col justify-center flex-1 py-1 min-w-0 mt-4 sm:mt-0">
+        {/* Category badge + source domain */}
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span
             className={cn(
-              "transition-colors",
-              isRead && !isArchived && "bg-[oklch(0.92_0.015_165)] dark:bg-[oklch(0.22_0.015_165)] text-[oklch(0.40_0.06_165)] dark:text-[oklch(0.75_0.05_165)] border-[oklch(0.85_0.02_165)] dark:border-[oklch(0.28_0.02_165)]",
-              isArchived && "opacity-60"
+              'text-xs font-bold px-2 py-0.5 rounded border',
+              categoryColors.text,
+              categoryColors.bg,
+              categoryColors.border
             )}
           >
-            <Clock className="h-3 w-3" />
-            {item.estimatedTime} min read
-          </Badge>
+            {primaryTopic}
+          </span>
+          {item.sourceDomain && (
+            <span className="text-xs text-slate-400 flex items-center gap-1 font-medium">
+              <span className="w-1 h-1 bg-slate-300 rounded-full" />
+              {item.sourceDomain}
+            </span>
+          )}
         </div>
 
-        {/* Topics */}
-        {item.topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {item.topics.map((topic, idx) => (
-              <Badge
-                key={idx}
-                size="xs"
-                variant="outline"
-                className={cn(
-                  "transition-colors",
-                  isRead && !isArchived && "border-[oklch(0.85_0.02_165)] dark:border-[oklch(0.28_0.02_165)] text-[oklch(0.40_0.06_165)] dark:text-[oklch(0.75_0.05_165)]",
-                  isArchived && "opacity-60"
-                )}
-              >
-                {topic}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {/* AI reasoning (if relevance score exists) */}
-        {item.reasoning && item.relevanceScore > 0 && (
-          <div className="flex gap-2 items-start">
-            <span className="text-muted-foreground/40 text-sm mt-0.5">&ldquo;</span>
-            <p className={cn(
-              "text-xs italic leading-relaxed transition-colors flex-1",
-              !isArchived && "text-muted-foreground",
-              isArchived && "opacity-60"
-            )}>
-              {item.reasoning}
-            </p>
-            <span className="text-muted-foreground/40 text-sm mt-0.5">&rdquo;</span>
-          </div>
-        )}
-      </CardContent>
-
-      <CardFooter className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className={cn(
-            "flex-1",
-            isRead && !isArchived && "border-[oklch(0.85_0.02_165)] text-[oklch(0.40_0.06_165)] hover:bg-[oklch(0.94_0.015_165)] dark:border-[oklch(0.28_0.02_165)] dark:text-[oklch(0.75_0.05_165)] dark:hover:bg-[oklch(0.22_0.015_165)]",
-            isArchived && "border-[oklch(0.85_0.02_60)] text-[oklch(0.45_0.04_60)] hover:bg-[oklch(0.94_0.012_60)] dark:border-[oklch(0.28_0.02_60)] dark:text-[oklch(0.70_0.03_60)] dark:hover:bg-[oklch(0.21_0.015_60)]"
-          )}
-          asChild
+        {/* Title */}
+        <a
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
         >
-          <a
-            href={item.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2"
-          >
-            Read Article
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        </Button>
+          <h3 className="text-slate-900 text-lg font-bold leading-tight mb-2 truncate group-hover:text-primary transition-colors">
+            {item.title}
+          </h3>
+        </a>
 
-        {/* Read/Unread button */}
-        {!item.readAt ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onMarkRead(item.id)}
-            disabled={isPending}
-            title="Mark as read"
-            className="hover:bg-[oklch(0.94_0.015_165)] hover:text-[oklch(0.40_0.06_165)] dark:hover:bg-[oklch(0.22_0.015_165)] dark:hover:text-[oklch(0.75_0.05_165)]"
-          >
-            <Check className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onMarkUnread(item.id)}
-            disabled={isPending}
-            title="Mark as unread"
-            className="text-[oklch(0.45_0.06_165)] hover:bg-[oklch(0.94_0.015_165)] dark:text-[oklch(0.70_0.05_165)] dark:hover:bg-[oklch(0.22_0.015_165)]"
-          >
-            <Undo className="h-4 w-4" />
-          </Button>
+        {/* Description */}
+        {(item.description || item.reasoning) && (
+          <p className="text-slate-500 text-sm line-clamp-2 mb-3">
+            {item.description || item.reasoning}
+          </p>
         )}
 
-        {/* Archive/Unarchive button */}
-        {!item.archivedAt ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onArchive(item.id)}
-            disabled={isPending}
-            title="Archive"
-            className="hover:bg-[oklch(0.94_0.012_60)] hover:text-[oklch(0.45_0.04_60)] dark:hover:bg-[oklch(0.21_0.015_60)] dark:hover:text-[oklch(0.70_0.03_60)]"
-          >
-            <Archive className="h-4 w-4" />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onUnarchive(item.id)}
-            disabled={isPending}
-            title="Unarchive"
-            className="text-[oklch(0.50_0.04_60)] hover:bg-[oklch(0.94_0.012_60)] dark:text-[oklch(0.65_0.03_60)] dark:hover:bg-[oklch(0.21_0.015_60)]"
-          >
-            <ArchiveX className="h-4 w-4" />
-          </Button>
+        {/* Meta: read time + added date */}
+        <div className="flex items-center gap-4 text-xs font-medium text-slate-400">
+          <span className="flex items-center gap-1.5">
+            <Clock className="size-3.5" />
+            {item.estimatedTime} min read
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Calendar className="size-3.5" />
+            Added {formatRelativeTime(new Date(item.savedAt))}
+          </span>
+        </div>
+      </div>
+
+      {/* Score + action section */}
+      <div
+        className={cn(
+          'flex flex-row sm:flex-col items-center sm:justify-center justify-between',
+          'border-t sm:border-t-0 sm:border-l border-slate-100',
+          'pt-4 sm:pt-0 pl-0 sm:pl-6 gap-4 min-w-[100px] mt-4 sm:mt-0'
         )}
-      </CardFooter>
-    </Card>
+      >
+        {/* Circular score badge */}
+        {score > 0 && (
+          <ScoreBadge
+            score={score}
+            variant="circular"
+            showLabel={true}
+          />
+        )}
+
+        {/* Mark as read button */}
+        <button
+          onClick={() => onMarkAsRead?.(item.id)}
+          className={cn(
+            'bg-slate-50 hover:bg-primary border border-slate-200 hover:border-primary',
+            'text-slate-400 hover:text-white p-2 rounded-lg transition-all shadow-sm',
+            'group/btn'
+          )}
+          title="Mark as Read"
+        >
+          <Check className="size-5 group-hover/btn:scale-110 transition-transform" />
+        </button>
+      </div>
+    </article>
   );
 }

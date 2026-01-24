@@ -12,24 +12,59 @@ const cardVariants = cva(
         elevated: "shadow-sm",
         interactive: "shadow-sm hover:shadow-lg hover:-translate-y-0.5 cursor-pointer",
       },
+      variant: {
+        default: "",
+        highlighted: "border-[oklch(0.48_0.22_262)] bg-[oklch(0.98_0.02_262)] dark:border-[oklch(0.60_0.19_262)] dark:bg-[oklch(0.18_0.03_262)]",
+      },
     },
     defaultVariants: {
       elevation: "elevated",
+      variant: "default",
     },
   }
 )
 
+interface CardProps extends React.ComponentProps<"div">, VariantProps<typeof cardVariants> {
+  accentBar?: boolean;
+  accentColor?: "primary" | "success" | "warning" | "destructive";
+}
+
 function Card({
   className,
   elevation,
+  variant,
+  accentBar = false,
+  accentColor = "primary",
+  children,
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof cardVariants>) {
+}: CardProps) {
+  const accentColors = {
+    primary: "bg-primary",
+    success: "bg-green-500",
+    warning: "bg-amber-500",
+    destructive: "bg-destructive",
+  };
+
   return (
     <div
       data-slot="card"
-      className={cn(cardVariants({ elevation }), "py-6", className)}
+      className={cn(
+        cardVariants({ elevation, variant }),
+        "py-6 relative overflow-hidden",
+        className
+      )}
       {...props}
-    />
+    >
+      {accentBar && (
+        <div
+          className={cn(
+            "absolute left-0 top-0 bottom-0 w-1 rounded-l-xl",
+            accentColors[accentColor]
+          )}
+        />
+      )}
+      {children}
+    </div>
   )
 }
 

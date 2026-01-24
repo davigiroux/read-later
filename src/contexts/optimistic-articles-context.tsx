@@ -14,9 +14,12 @@ export interface SavedItem {
   savedAt: Date;
   topics: string[];
   relevanceScore: number;
-  reasoning: string;
+  reasoning: string | null;
   readAt: Date | null;
   archivedAt: Date | null;
+  imageUrl: string | null;
+  description: string | null;
+  sourceDomain: string | null;
 }
 
 export interface OptimisticArticle {

@@ -1,44 +1,35 @@
+import { Suspense } from "react";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { UserButton } from "@clerk/nextjs";
 import { db } from "@/lib/db";
-import { SaveArticleForm } from "@/components/dashboard/save-article-form";
 import { SavedItemsList } from "@/components/dashboard/saved-items-list";
-import { GroupedItemsDisplay } from "@/components/dashboard/grouped-items-display";
 import { EmptyState } from "@/components/dashboard/empty-state";
-import { FilterTabs } from "@/components/dashboard/filter-tabs";
-import { ViewToggle } from "@/components/dashboard/view-toggle";
+import { SortToggle, type SortOption } from "@/components/dashboard/sort-toggle";
 import { OptimisticArticlesProvider } from "@/contexts/optimistic-articles-context";
-import { ViewPreferenceProvider } from "@/contexts/view-preference-context";
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { PageHeader } from "@/components/layout";
+import { AddLinkModal } from "@/components/dashboard/add-link-modal";
 
 export const metadata = {
-  title: "Dashboard | LaterStack",
+  title: "Smart Queue | LaterStack",
   description: "Your AI-powered reading queue",
 };
 
 interface DashboardPageProps {
-  searchParams: Promise<{ filter?: string }>;
+  searchParams: Promise<{ sort?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
   const params = await searchParams;
-  const filter = params.filter || 'all';
+  const sort = (params.sort as SortOption) || 'priority';
   const { userId } = await auth();
 
-  // Middleware ensures userId is always present on protected routes
   if (!userId) {
     throw new Error("Unauthorized - userId not found");
   }
 
-  // Find or create user in database
   let user = await db.user.findUnique({
     where: { clerkId: userId },
   });
 
-  // Create user if not found (handles webhook race condition)
   if (!user) {
     try {
       const client = await clerkClient();
@@ -57,16 +48,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         },
       });
     } catch (error: unknown) {
-      // Log the error for debugging
       console.error("Error creating user in dashboard:", error);
-
-      // User might have been created by webhook between our check and create attempt
-      // Always try to find the user again regardless of error type
       user = await db.user.findUnique({
         where: { clerkId: userId },
       });
 
-      // If still not found, the error wasn't a race condition
       if (!user) {
         console.error("User still not found after retry. Original error:", error);
         throw new Error(`Failed to create user in database. ClerkId: ${userId}`);
@@ -74,128 +60,102 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     }
   }
 
-  // Ensure user exists (should never happen with improved error handling)
   if (!user) {
     throw new Error(`User not found in database after all attempts. ClerkId: ${userId}`);
   }
 
-  // Build where clause based on filter
-  const baseWhere = { userId: user.id };
-  const whereClause = {
-    ...baseWhere,
-    ...(filter === 'unread' && { readAt: null, archivedAt: null }),
-    ...(filter === 'read' && { readAt: { not: null }, archivedAt: null }),
-    ...(filter === 'archived' && { archivedAt: { not: null } }),
-    ...(filter === 'quick-read' && { estimatedTime: { lt: 5 }, archivedAt: null }),
-    // 'all' filter = no additional filters beyond userId
+  // Base query: unread, non-archived items
+  const baseWhere = {
+    userId: user.id,
+    readAt: null,
+    archivedAt: null,
   };
 
-  // Fetch filtered items
+  // Order by sort option
+  const orderBy = sort === 'newest'
+    ? [{ savedAt: 'desc' as const }]
+    : sort === 'shortest'
+      ? [{ estimatedTime: 'asc' as const }, { relevanceScore: 'desc' as const }]
+      : [{ relevanceScore: 'desc' as const }, { savedAt: 'desc' as const }];
+
   const savedItems = await db.savedItem.findMany({
-    where: whereClause,
-    orderBy: [
-      { relevanceScore: 'desc' },
-      { savedAt: 'desc' },
-    ],
+    where: baseWhere,
+    orderBy,
     take: 50,
   });
 
-  // Group items by status for "all" view
-  const groupedItems = filter === 'all' ? {
-    unread: savedItems.filter((item: { readAt: Date | null; archivedAt: Date | null }) => !item.readAt && !item.archivedAt),
-    read: savedItems.filter((item: { readAt: Date | null; archivedAt: Date | null }) => item.readAt && !item.archivedAt),
-    archived: savedItems.filter((item: { archivedAt: Date | null }) => item.archivedAt),
-  } : null;
+  const unreadCount = await db.savedItem.count({ where: baseWhere });
 
-  // Calculate counts for all filters (parallel queries for performance)
-  const [allCount, unreadCount, readCount, archivedCount, quickReadCount] =
-    await Promise.all([
-      db.savedItem.count({ where: baseWhere }),
-      db.savedItem.count({ where: { ...baseWhere, readAt: null, archivedAt: null } }),
-      db.savedItem.count({ where: { ...baseWhere, readAt: { not: null }, archivedAt: null } }),
-      db.savedItem.count({ where: { ...baseWhere, archivedAt: { not: null } } }),
-      db.savedItem.count({ where: { ...baseWhere, estimatedTime: { lt: 5 }, archivedAt: null } }),
-    ]);
+  // Get user's primary goal for subtitle
+  const userGoal = user.goals || "Your reading interests";
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6 md:p-8 animate-[fade-in_0.4s_ease-out]">
-      <div className="mx-auto max-w-7xl space-y-6 sm:space-y-8 md:space-y-10">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Image
-                src="/logo-icon.png"
-                alt="LaterStack"
-                width={36}
-                height={36}
-                className="w-8 h-8 sm:w-9 sm:h-9"
-                unoptimized
+    <div className="min-h-full bg-slate-50 animate-[fade-in_0.4s_ease-out]">
+      <div className="p-8">
+        <div className="max-w-5xl mx-auto flex flex-col gap-8 pb-10">
+          {/* Header */}
+          <div className="flex flex-col gap-6">
+            <div className="flex items-end justify-between">
+              <PageHeader
+                title="Smart Queue"
+                subtitle={
+                  <span>
+                    AI-prioritized based on your goal:{" "}
+                    <span className="text-primary font-semibold bg-blue-50 px-2 py-0.5 rounded">
+                      &quot;{userGoal}&quot;
+                    </span>
+                  </span>
+                }
               />
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-                Dashboard
-              </h1>
+              <Suspense fallback={<div className="h-9 w-[180px] bg-slate-100 rounded-lg animate-pulse" />}>
+                <SortToggle />
+              </Suspense>
             </div>
-            <p className="text-muted-foreground text-sm sm:text-base md:text-lg">
-              Your reading stack
-              {allCount > 0 &&
-                ` · ${allCount} article${allCount !== 1 ? "s" : ""}`}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild className="flex-shrink-0">
-              <Link href="/settings" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">Settings</span>
-              </Link>
-            </Button>
-            <UserButton afterSignOutUrl="/" />
-          </div>
-        </div>
 
-        {/* Wrap client components in providers */}
-        <ViewPreferenceProvider>
+            {/* Stats row */}
+            {unreadCount > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Queue Health */}
+                <div className="md:col-span-3 bg-white border border-slate-200 rounded-xl p-6 flex items-center justify-between shadow-sm">
+                  <div className="flex flex-col gap-1">
+                    <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Queue Health</p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-slate-900 text-3xl font-bold">
+                        {unreadCount}
+                        <span className="text-xl text-slate-400 ml-1">articles</span>
+                      </span>
+                    </div>
+                    <p className="text-slate-500 text-sm mt-1">Ready to read</p>
+                  </div>
+                </div>
+
+                {/* Estimated time */}
+                <div className="md:col-span-1 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 flex flex-col justify-between text-white shadow-lg shadow-blue-500/20">
+                  <div className="flex items-start justify-between">
+                    <span className="text-white/80 text-sm">Today</span>
+                  </div>
+                  <div>
+                    <p className="text-3xl font-bold mt-2">
+                      {savedItems.reduce((acc, item) => acc + item.estimatedTime, 0)}
+                      <span className="text-lg font-medium opacity-70 ml-1">min</span>
+                    </p>
+                    <p className="text-sm opacity-90 font-medium">Estimated read time</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <OptimisticArticlesProvider initialArticles={savedItems}>
-          {/* Save Article Form */}
-          <div className="rounded-xl border bg-card p-4 sm:p-6 md:p-8 shadow-sm">
-            <h2 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
-              Stack New Article
-            </h2>
-            <SaveArticleForm />
-          </div>
-
-          {/* Filter Tabs with View Toggle */}
-          {allCount > 0 && (
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <FilterTabs
-                counts={{
-                  all: allCount,
-                  unread: unreadCount,
-                  read: readCount,
-                  archived: archivedCount,
-                  quickRead: quickReadCount,
-                }}
-              />
-              <ViewToggle />
-            </div>
-          )}
-
-          {/* Saved Articles or Empty State */}
-          {savedItems.length > 0 ? (
-            filter === 'all' && groupedItems ? (
-              <GroupedItemsDisplay
-                unread={groupedItems.unread}
-                read={groupedItems.read}
-                archived={groupedItems.archived}
-              />
-            ) : (
+            {/* Articles list */}
+            {savedItems.length > 0 ? (
               <SavedItemsList />
-            )
-          ) : (
-            <EmptyState />
-          )}
+            ) : (
+              <EmptyState />
+            )}
+            <AddLinkModal />
           </OptimisticArticlesProvider>
-        </ViewPreferenceProvider>
+        </div>
       </div>
     </div>
   );
