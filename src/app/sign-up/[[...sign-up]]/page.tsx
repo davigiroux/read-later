@@ -1,5 +1,11 @@
 import { SignUp } from '@clerk/nextjs';
 import { Logo } from '@/components/ui/logo';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sign Up | LaterStack',
+  description: 'Create a free LaterStack account. AI-powered article prioritization based on your goals.',
+};
 
 export default function SignUpPage() {
   return (
