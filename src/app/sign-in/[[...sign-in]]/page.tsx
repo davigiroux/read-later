@@ -1,5 +1,15 @@
 import { SignIn } from '@clerk/nextjs';
 import { Logo } from '@/components/ui/logo';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sign In | LaterStack',
+  description: 'Sign in to your LaterStack account to access your smart reading queue.',
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function SignInPage() {
   return (

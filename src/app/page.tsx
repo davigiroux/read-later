@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Clock, Target, ArrowRight, Check, PlayCircle, Plus } from 'lucide-react';
+import { Sparkles, Clock, Target, ArrowRight, Check, Plus } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { MarketingNavbar } from '@/components/marketing/navbar';
@@ -59,28 +59,28 @@ export default async function Home() {
               </div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight">
-                Master your
+                Stop hoarding links.
                 <br />
-                <span className="gradient-text">reading list</span>
+                <span className="gradient-text">Start reading</span>
                 <br />
-                with AI.
+                what matters.
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.
+                Your &ldquo;Save for Later&rdquo; list is a graveyard of good intentions. LaterStack is an AI engine that filters the noise, scores relevance based on your goals, and tells you exactly what to read next.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button asChild variant="primary-blue" size="lg" className="text-base gap-2 group">
                   <Link href="/dashboard">
-                    Start stacking for free
+                    Try the MVP for Free
                     <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-base gap-2">
-                  <Link href="/features">
-                    <PlayCircle className="size-4 text-muted-foreground" />
-                    Watch demo
+                  <Link href="#features">
+                    See how it works
+                    <ArrowRight className="size-4 text-muted-foreground" />
                   </Link>
                 </Button>
               </div>
@@ -97,7 +97,7 @@ export default async function Home() {
                     />
                   ))}
                 </div>
-                <p>Join 10,000+ smart readers</p>
+                <p>Early adopters welcome</p>
               </div>
             </div>
 
@@ -231,7 +231,7 @@ export default async function Home() {
       </section>
 
       {/* Features section */}
-      <section className="py-24 px-4 bg-muted/30">
+      <section id="features" className="py-24 px-4 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
@@ -266,15 +266,15 @@ export default async function Home() {
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-            Ready to transform your reading?
+            Your reading list won&apos;t fix itself.
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Join thousands of readers who&apos;ve already upgraded their reading experience.
+            Stop saving. Start reading.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild variant="primary-blue" size="lg" className="text-base gap-2">
               <Link href="/dashboard">
-                Get started for free
+                Try the MVP for Free
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
