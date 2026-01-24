@@ -28,16 +28,16 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'LaterStack - Stop hoarding links. Start reading what matters.',
-  description: 'Your "Save for Later" list is a graveyard of good intentions. LaterStack filters the noise, scores relevance based on your goals, and tells you exactly what to read next.',
+  title: 'LaterStack - Master your reading list with AI',
+  description: 'Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.',
   keywords: ['reading queue', 'article manager', 'AI recommendations', 'read later', 'productivity', 'smart reading'],
   authors: [{ name: 'Davi Giroux', url: 'https://devgiroux.com' }],
   creator: 'Davi Giroux',
   metadataBase: new URL('https://laterstack.io'),
 
   openGraph: {
-    title: 'LaterStack - Stop hoarding links. Start reading what matters.',
-    description: 'Your "Save for Later" list is a graveyard of good intentions. LaterStack filters the noise, scores relevance based on your goals, and tells you exactly what to read next.',
+    title: 'LaterStack - Master your reading list with AI',
+    description: 'Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.',
     url: 'https://laterstack.io',
     siteName: 'LaterStack',
     locale: 'en_US',
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
 
   twitter: {
     card: 'summary_large_image',
-    title: 'LaterStack - Stop hoarding links. Start reading what matters.',
-    description: 'Your "Save for Later" list is a graveyard of good intentions. LaterStack tells you exactly what to read next.',
+    title: 'LaterStack - Master your reading list with AI',
+    description: 'Stop drowning in tabs. LaterStack uses AI to rank and schedule your reading based on your goals.',
     creator: '@devgiroux',
   },
 

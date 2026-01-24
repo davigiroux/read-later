@@ -39,7 +39,7 @@ export function WebApplicationJsonLd() {
       priceCurrency: 'USD',
     },
     description:
-      'AI-powered reading queue that scores articles based on your goals and tells you exactly what to read next.',
+      'Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.',
     featureList: [
       'AI-powered article ranking',
       'Reading time estimates',
