@@ -1,26 +1,29 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Clock, Target, ArrowRight, Check, Plus } from 'lucide-react';
+import { Bookmark, Sparkles, Target, ArrowRight, Check, Plus, Clock, ChevronRight } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { MarketingNavbar } from '@/components/marketing/navbar';
 import { MarketingFooter } from '@/components/marketing/footer';
+import { Logo } from '@/components/ui/logo';
 
-const features = [
+const journeySteps = [
   {
+    step: 1,
+    icon: Bookmark,
+    title: 'Save Anything',
+    description: 'Articles, videos, threads — save from anywhere with one click.',
+  },
+  {
+    step: 2,
     icon: Sparkles,
-    title: 'AI-Powered Curation',
-    description: 'Smart relevance scoring helps you focus on articles that matter most to you.',
+    title: 'AI Does the Work',
+    description: 'AI scores relevance based on your goals and interests.',
   },
   {
-    icon: Clock,
-    title: 'Time-Aware Reading',
-    description: 'Automatic reading time estimates help you choose articles that fit your schedule.',
-  },
-  {
+    step: 3,
     icon: Target,
-    title: 'Personal Goals',
-    description: 'Set reading goals and interests to get tailored article recommendations.',
+    title: 'Read What Matters',
+    description: 'Focus on high-impact content first. No more decision fatigue.',
   },
 ];
 
@@ -44,7 +47,20 @@ export default async function Home() {
       <div className="gradient-blob gradient-blob-blue w-[600px] h-[600px] -top-64 -right-64 absolute" />
       <div className="gradient-blob gradient-blob-purple w-[500px] h-[500px] top-1/2 -left-48 absolute" />
 
-      <MarketingNavbar />
+      {/* Minimal header */}
+      <header className="w-full py-4 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Logo size="md" />
+          <div className="flex items-center gap-3">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
+            <Button asChild variant="primary-blue" size="sm">
+              <Link href="/dashboard">Get Started</Link>
+            </Button>
+          </div>
+        </div>
+      </header>
 
       {/* Hero section - 2 column grid */}
       <section className="flex-1 flex items-center pt-12 pb-20 md:py-24 px-4">
@@ -230,32 +246,127 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Features section */}
+      {/* How it works - User Journey */}
       <section id="features" className="py-24 px-4 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              Everything you need to read smarter
+              How it works
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Powerful features to help you save, organize, and discover content that matters.
+              Three simple steps to finally read what you save.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={feature.title}
-                className="group p-8 rounded-2xl bg-card border shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="size-7 text-primary" />
+          {/* Journey Steps */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4">
+            {journeySteps.map((step, index) => (
+              <div key={step.title} className="relative">
+                {/* Connector arrow (desktop only) */}
+                {index < journeySteps.length - 1 && (
+                  <div className="hidden lg:flex absolute top-1/2 -right-4 z-10 text-muted-foreground/50">
+                    <ChevronRight className="size-8" />
+                  </div>
+                )}
+
+                <div className="group p-6 rounded-2xl bg-card border shadow-sm hover:shadow-lg transition-all duration-300">
+                  {/* Step number badge */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                      {step.step}
+                    </div>
+                    <step.icon className="size-5 text-muted-foreground" />
+                  </div>
+
+                  {/* Mini mockup */}
+                  <div className="mb-4 rounded-xl border bg-muted/30 overflow-hidden">
+                    {step.step === 1 && (
+                      /* Save mockup - Browser extension popup */
+                      <div className="p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="size-6 rounded bg-primary/20 flex items-center justify-center">
+                            <Bookmark className="size-3 text-primary" />
+                          </div>
+                          <span className="text-xs font-medium">Save to LaterStack</span>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="h-2 bg-muted rounded w-full" />
+                          <div className="h-2 bg-muted rounded w-3/4" />
+                        </div>
+                        <div className="mt-3 flex gap-2">
+                          <div className="flex-1 h-7 bg-primary rounded text-[10px] text-primary-foreground font-medium flex items-center justify-center">
+                            Save
+                          </div>
+                          <div className="h-7 px-3 border rounded text-[10px] font-medium flex items-center justify-center text-muted-foreground">
+                            Cancel
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {step.step === 2 && (
+                      /* AI mockup - Scoring animation */
+                      <div className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="text-xs font-medium">Analyzing content...</div>
+                          <Sparkles className="size-4 text-primary animate-pulse" />
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-background border">
+                            <span className="text-[10px] text-muted-foreground">Relevance</span>
+                            <span className="text-xs font-bold text-primary">98</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-background border">
+                            <span className="text-[10px] text-muted-foreground">Goal match</span>
+                            <span className="text-xs font-bold text-green-600">High</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-background border">
+                            <span className="text-[10px] text-muted-foreground">Read time</span>
+                            <span className="text-xs font-bold">8 min</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {step.step === 3 && (
+                      /* Queue mockup - Prioritized list */
+                      <div className="p-4">
+                        <div className="text-xs font-medium mb-3">Your Smart Queue</div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                            <div className="w-1 h-6 bg-primary rounded-full" />
+                            <div className="flex-1">
+                              <div className="h-2 bg-blue-200 dark:bg-blue-700 rounded w-full mb-1" />
+                              <div className="h-1.5 bg-blue-100 dark:bg-blue-800 rounded w-2/3" />
+                            </div>
+                            <span className="text-[10px] font-bold text-primary">98</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-background border opacity-70">
+                            <div className="w-1 h-6 bg-muted rounded-full" />
+                            <div className="flex-1">
+                              <div className="h-2 bg-muted rounded w-full mb-1" />
+                              <div className="h-1.5 bg-muted/50 rounded w-2/3" />
+                            </div>
+                            <span className="text-[10px] font-bold text-muted-foreground">85</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-background border opacity-50">
+                            <div className="w-1 h-6 bg-muted rounded-full" />
+                            <div className="flex-1">
+                              <div className="h-2 bg-muted rounded w-full mb-1" />
+                              <div className="h-1.5 bg-muted/50 rounded w-2/3" />
+                            </div>
+                            <span className="text-[10px] font-bold text-muted-foreground">72</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {step.description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
               </div>
             ))}
           </div>

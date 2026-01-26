@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import { Github, Twitter } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
-import { navLinks, socialLinks } from './nav-links';
+import { socialLinks } from './nav-links';
 
 export function MarketingFooter() {
   return (
@@ -9,17 +8,6 @@ export function MarketingFooter() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <Logo size="sm" textClassName="text-muted-foreground" iconClassName="text-muted-foreground" />
-          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
           <div className="flex items-center gap-4">
             <a
               href={socialLinks.twitter}
