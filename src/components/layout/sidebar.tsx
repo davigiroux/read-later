@@ -1,9 +1,10 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useUser, useClerk } from "@clerk/nextjs"
+import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
 import {
   List,
   Archive,
@@ -23,12 +24,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const navItems = [
-  { href: "/dashboard", label: "Smart Queue", icon: List, exactMatch: true },
-  { href: "/dashboard/archive", label: "Archive", icon: Archive },
-  { href: "/dashboard/discover", label: "Discover", icon: Compass },
-]
-
 interface SidebarProps {
   collapsed?: boolean
   onToggle?: () => void
@@ -39,6 +34,15 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
   const pathname = usePathname()
   const { user } = useUser()
   const { signOut } = useClerk()
+  const t = useTranslations('nav')
+  const tSidebar = useTranslations('sidebar')
+  const tCommon = useTranslations('common')
+
+  const navItems = [
+    { href: "/dashboard", labelKey: "smartQueue" as const, icon: List, exactMatch: true },
+    { href: "/dashboard/archive", labelKey: "archive" as const, icon: Archive },
+    { href: "/dashboard/discover", labelKey: "discover" as const, icon: Compass },
+  ]
 
   // Get user initials for avatar
   const userInitials = React.useMemo(() => {
@@ -49,6 +53,9 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
   }, [user])
 
   const userName = user?.fullName || user?.firstName || 'User'
+
+  // Remove locale prefix from pathname for comparison
+  const normalizedPathname = pathname.replace(/^\/(en|pt-BR)/, '') || '/'
 
   return (
     <aside
@@ -64,7 +71,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
           <Logo showText={!collapsed} size="md" />
         </Link>
         {!collapsed && (
-          <p className="text-slate-400 text-xs font-normal mt-1 ml-11">Smart Queue v2.0</p>
+          <p className="text-slate-400 text-xs font-normal mt-1 ml-11">{tSidebar('version')}</p>
         )}
       </div>
 
@@ -73,13 +80,13 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
         <div className="flex flex-col gap-1.5">
           {!collapsed && (
             <p className="px-3 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-              Library
+              {t('library')}
             </p>
           )}
           {navItems.map((item) => {
             const isActive = item.exactMatch
-              ? pathname === item.href
-              : pathname === item.href || pathname.startsWith(item.href + '/')
+              ? normalizedPathname === item.href
+              : normalizedPathname === item.href || normalizedPathname.startsWith(item.href + '/')
 
             return (
               <Link
@@ -98,7 +105,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
                   isActive && "fill-primary/20"
                 )} />
                 {!collapsed && (
-                  <span className="text-sm">{item.label}</span>
+                  <span className="text-sm">{t(item.labelKey)}</span>
                 )}
               </Link>
             )
@@ -120,7 +127,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
             ) : (
               <>
                 <ChevronLeft className="size-5" />
-                <span className="text-sm">Collapse</span>
+                <span className="text-sm">{t('collapse')}</span>
               </>
             )}
           </button>
@@ -139,7 +146,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
           )}
         >
           <Settings className="size-5" />
-          {!collapsed && <span className="text-sm font-medium">Settings</span>}
+          {!collapsed && <span className="text-sm font-medium">{t('settings')}</span>}
         </Link>
 
         {/* User profile dropdown */}
@@ -163,7 +170,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
                     {userName}
                   </span>
                   <span className="text-slate-400 text-xs leading-none mt-1">
-                    Pro Member
+                    {tSidebar('proMember')}
                   </span>
                 </div>
               )}
@@ -173,7 +180,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
             <DropdownMenuItem asChild>
               <Link href="/settings" className="flex items-center gap-2">
                 <Settings className="size-4" />
-                Settings
+                {t('settings')}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -182,7 +189,7 @@ function Sidebar({ collapsed = false, onToggle, className }: SidebarProps) {
               className="text-red-600 focus:text-red-600 focus:bg-red-50"
             >
               <LogOut className="size-4 mr-2" />
-              Sign out
+              {tCommon('signOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

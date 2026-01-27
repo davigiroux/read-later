@@ -1,9 +1,20 @@
-import Link from 'next/link';
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/logo';
-import { navLinks } from './nav-links';
 
 export function MarketingNavbar() {
+  const t = useTranslations('nav');
+  const tCommon = useTranslations('common');
+
+  const navLinks = [
+    { href: '/features', labelKey: 'features' },
+    { href: '/pricing', labelKey: 'pricing' },
+    { href: '/about', labelKey: 'about' },
+  ] as const;
+
   return (
     <nav className="sticky top-0 z-50 glass-panel border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,16 +29,16 @@ export function MarketingNavbar() {
                 href={link.href}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             ))}
           </div>
           <div className="flex items-center gap-3">
             <Button asChild variant="ghost" size="sm">
-              <Link href="/sign-in">Sign In</Link>
+              <Link href="/sign-in">{tCommon('signIn')}</Link>
             </Button>
             <Button asChild variant="primary-blue" size="sm">
-              <Link href="/dashboard">Get Started</Link>
+              <Link href="/dashboard">{tCommon('getStarted')}</Link>
             </Button>
           </div>
         </div>

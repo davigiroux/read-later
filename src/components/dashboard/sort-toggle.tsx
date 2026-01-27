@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 export type SortOption = 'priority' | 'newest' | 'shortest';
@@ -9,16 +10,17 @@ interface SortToggleProps {
   className?: string;
 }
 
-const sortOptions: { value: SortOption; label: string }[] = [
-  { value: 'priority', label: 'Priority' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'shortest', label: 'Shortest' },
-];
-
 export function SortToggle({ className }: SortToggleProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentSort = (searchParams.get('sort') as SortOption) || 'priority';
+  const t = useTranslations('dashboard.sort');
+
+  const sortOptions: { value: SortOption; labelKey: 'priority' | 'newest' | 'shortest' }[] = [
+    { value: 'priority', labelKey: 'priority' },
+    { value: 'newest', labelKey: 'newest' },
+    { value: 'shortest', labelKey: 'shortest' },
+  ];
 
   const handleSortChange = (sort: SortOption) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -48,7 +50,7 @@ export function SortToggle({ className }: SortToggleProps) {
               : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           )}
         >
-          {option.label}
+          {t(option.labelKey)}
         </button>
       ))}
     </div>

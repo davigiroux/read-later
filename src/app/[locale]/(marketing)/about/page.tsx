@@ -1,58 +1,62 @@
-import Link from 'next/link';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Mail, Github, Twitter } from 'lucide-react';
 
-export default function AboutPage() {
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations('about');
+
   return (
     <div className="py-16 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Hero */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-display font-bold mb-6">
-            About LaterStack
+            {t('headline')}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Built by readers, for readers.
+            {t('subheadline')}
           </p>
         </div>
 
         {/* Story */}
         <div className="prose prose-lg dark:prose-invert mx-auto mb-16">
-          <p>
-            LaterStack was born from a simple frustration: too many articles saved, too little time to read them. We believe that what you read shapes who you become, and life&apos;s too short to waste on content that doesn&apos;t matter.
-          </p>
-          <p>
-            Traditional read-later apps treat all articles the same. But not all articles are created equal. Some will change your perspective. Others will teach you something new. And many... well, they&apos;ll just sit there, forgotten.
-          </p>
-          <p>
-            We built LaterStack to help you focus on what matters. Using AI, we analyze your interests, goals, and reading patterns to surface the content that&apos;s most relevant to you. It&apos;s like having a personal librarian who knows exactly what you need to read next.
-          </p>
+          <p>{t('story.p1')}</p>
+          <p>{t('story.p2')}</p>
+          <p>{t('story.p3')}</p>
         </div>
 
         {/* Values */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           <div className="p-6 rounded-xl bg-card border">
-            <h3 className="text-xl font-semibold mb-3">Privacy First</h3>
+            <h3 className="text-xl font-semibold mb-3">{t('values.privacy.title')}</h3>
             <p className="text-muted-foreground">
-              Your reading habits are personal. We never sell your data or share your activity with third parties.
+              {t('values.privacy.description')}
             </p>
           </div>
           <div className="p-6 rounded-xl bg-card border">
-            <h3 className="text-xl font-semibold mb-3">Open Source</h3>
+            <h3 className="text-xl font-semibold mb-3">{t('values.openSource.title')}</h3>
             <p className="text-muted-foreground">
-              We believe in transparency. Parts of LaterStack are open source, and we actively contribute to the community.
+              {t('values.openSource.description')}
             </p>
           </div>
           <div className="p-6 rounded-xl bg-card border">
-            <h3 className="text-xl font-semibold mb-3">User Focused</h3>
+            <h3 className="text-xl font-semibold mb-3">{t('values.userFocused.title')}</h3>
             <p className="text-muted-foreground">
-              Every feature we build starts with a real user need. We listen, iterate, and improve constantly.
+              {t('values.userFocused.description')}
             </p>
           </div>
           <div className="p-6 rounded-xl bg-card border">
-            <h3 className="text-xl font-semibold mb-3">Quality Over Quantity</h3>
+            <h3 className="text-xl font-semibold mb-3">{t('values.quality.title')}</h3>
             <p className="text-muted-foreground">
-              We&apos;d rather help you read 10 great articles than 100 mediocre ones. Depth over breadth.
+              {t('values.quality.description')}
             </p>
           </div>
         </div>
@@ -60,16 +64,16 @@ export default function AboutPage() {
         {/* Contact */}
         <div className="text-center p-8 rounded-2xl bg-muted/30 border">
           <h2 className="text-2xl font-display font-bold mb-4">
-            Get in touch
+            {t('contact.headline')}
           </h2>
           <p className="text-muted-foreground mb-6">
-            Have questions, feedback, or just want to say hi? We&apos;d love to hear from you.
+            {t('contact.description')}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Button asChild variant="outline" className="gap-2">
               <a href="mailto:hello@laterstack.io">
                 <Mail className="size-4" />
-                Email us
+                {t('contact.email')}
               </a>
             </Button>
             <Button asChild variant="outline" className="gap-2">
@@ -79,7 +83,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
               >
                 <Twitter className="size-4" />
-                Twitter
+                {t('contact.twitter')}
               </a>
             </Button>
             <Button asChild variant="outline" className="gap-2">
@@ -89,7 +93,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
               >
                 <Github className="size-4" />
-                GitHub
+                {t('contact.github')}
               </a>
             </Button>
           </div>
@@ -98,11 +102,11 @@ export default function AboutPage() {
         {/* CTA */}
         <div className="text-center mt-16">
           <h2 className="text-2xl font-display font-bold mb-4">
-            Ready to read smarter?
+            {t('cta.headline')}
           </h2>
           <Button asChild variant="primary-blue" size="lg" className="gap-2">
             <Link href="/dashboard">
-              Get started for free
+              {t('cta.button')}
               <ArrowRight className="size-4" />
             </Link>
           </Button>

@@ -1,0 +1,373 @@
+{
+  "metadata": {
+    "title": "LaterStack - Master your reading list with AI",
+    "description": "Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.",
+    "signInTitle": "Sign In | LaterStack",
+    "signInDescription": "Sign in to your LaterStack account to access your smart reading queue.",
+    "signUpTitle": "Sign Up | LaterStack",
+    "signUpDescription": "Create a free LaterStack account. AI-powered article prioritization based on your goals."
+  },
+  "common": {
+    "getStarted": "Get Started",
+    "signIn": "Sign In",
+    "signOut": "Sign out",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "min": "min",
+    "minRead": "min read",
+    "articles": "articles",
+    "score": "Score",
+    "allRightsReserved": "All rights reserved."
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "about": "About",
+    "smartQueue": "Smart Queue",
+    "archive": "Archive",
+    "discover": "Discover",
+    "settings": "Settings",
+    "library": "Library",
+    "collapse": "Collapse"
+  },
+  "home": {
+    "badge": "AI-Powered Curation v2.0",
+    "headline": "Stop hoarding links.<br></br><gradient>Start reading</gradient><br></br>what matters.",
+    "subheadline": "Your 'Save for Later' list is a graveyard of good intentions. LaterStack is an AI engine that filters the noise, scores relevance based on your goals, and tells you exactly what to read next.",
+    "ctaPrimary": "Try the MVP for Free",
+    "ctaSecondary": "See how it works",
+    "earlyAdopters": "Early adopters welcome",
+    "howItWorks": "How it works",
+    "howItWorksSubtitle": "Three simple steps to finally read what you save.",
+    "step1Title": "Save Anything",
+    "step1Description": "Articles, videos, threads — save from anywhere with one click.",
+    "step2Title": "AI Does the Work",
+    "step2Description": "AI scores relevance based on your goals and interests.",
+    "step3Title": "Read What Matters",
+    "step3Description": "Focus on high-impact content first. No more decision fatigue.",
+    "mockQueue": {
+      "title": "Your Smart Queue",
+      "subtitle": "Sorted by Relevance & Impact",
+      "focusTime": "Focus Time",
+      "timeLeft": "{time} left",
+      "highImpact": "High Impact",
+      "analyzing": "Analyzing content...",
+      "relevance": "Relevance",
+      "goalMatch": "Goal match",
+      "high": "High",
+      "readTime": "Read time"
+    },
+    "mockSave": {
+      "title": "Save to LaterStack"
+    },
+    "finalCta": {
+      "headline": "Your reading list won't fix itself.",
+      "subheadline": "Stop saving. Start reading.",
+      "noCreditCard": "No credit card required"
+    },
+    "topics": {
+      "career": "Career",
+      "tech": "Tech"
+    }
+  },
+  "features": {
+    "headline": "Features built for serious readers",
+    "subheadline": "Everything you need to transform your reading experience. Save time, read smarter, and never miss important content again.",
+    "aiScoring": {
+      "title": "AI-Powered Scoring",
+      "description": "Every article gets a relevance score based on your goals, interests, and reading history. Focus on what matters most."
+    },
+    "readingTime": {
+      "title": "Reading Time Estimates",
+      "description": "Know exactly how long each article takes. Plan your reading sessions and make the most of your available time."
+    },
+    "personalGoals": {
+      "title": "Personal Goals",
+      "description": "Set your reading goals and watch the AI prioritize content that helps you achieve them."
+    },
+    "smartRecommendations": {
+      "title": "Smart Recommendations",
+      "description": "The more you read, the smarter it gets. Discover new content that matches your evolving interests."
+    },
+    "quickSave": {
+      "title": "Quick Save",
+      "description": "Save articles instantly from any browser with our extension. One click and it's in your queue."
+    },
+    "privacyFirst": {
+      "title": "Privacy First",
+      "description": "Your reading habits are private. We don't sell your data or track you across the web."
+    },
+    "analytics": {
+      "title": "Reading Analytics",
+      "description": "Track your reading progress over time. See your streaks, completion rates, and reading trends."
+    },
+    "organize": {
+      "title": "Organize Everything",
+      "description": "Archive read articles, create collections, and keep your reading list clean and organized."
+    },
+    "cta": {
+      "headline": "Ready to get started?",
+      "button": "Try LaterStack free"
+    }
+  },
+  "pricing": {
+    "headline": "Simple, transparent pricing",
+    "subheadline": "Start for free, upgrade when you need more. No hidden fees, no surprises.",
+    "mostPopular": "Most Popular",
+    "free": {
+      "name": "Free",
+      "description": "Perfect for getting started",
+      "features": {
+        "articles": "Save up to 50 articles",
+        "scoring": "Basic AI scoring",
+        "readingTime": "Reading time estimates",
+        "extension": "Browser extension"
+      },
+      "cta": "Get Started"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$9",
+      "period": "/month",
+      "description": "For serious readers",
+      "features": {
+        "articles": "Unlimited articles",
+        "aiCuration": "Advanced AI curation",
+        "goals": "Personal goals & interests",
+        "analytics": "Reading analytics",
+        "support": "Priority support",
+        "api": "API access"
+      },
+      "cta": "Start Pro Trial"
+    },
+    "team": {
+      "name": "Team",
+      "price": "$29",
+      "period": "/month",
+      "description": "For teams and organizations",
+      "features": {
+        "everything": "Everything in Pro",
+        "members": "Up to 10 team members",
+        "collections": "Shared collections",
+        "teamAnalytics": "Team analytics",
+        "admin": "Admin controls",
+        "sso": "SSO integration"
+      },
+      "cta": "Contact Sales"
+    },
+    "help": {
+      "headline": "Questions? We're here to help.",
+      "cta": "Contact us"
+    }
+  },
+  "about": {
+    "headline": "About LaterStack",
+    "subheadline": "Built by readers, for readers.",
+    "story": {
+      "p1": "We started LaterStack because we were drowning in our own reading lists. Hundreds of saved articles, but never enough time to read them. Sound familiar?",
+      "p2": "The problem wasn't saving articles — it was deciding what to read. Every saved link felt equally important, and the list just kept growing. We needed a smarter way to prioritize.",
+      "p3": "That's why we built LaterStack. An AI that understands your goals and interests, scores every article for relevance, and tells you exactly what to read next. No more decision fatigue. Just focused reading."
+    },
+    "values": {
+      "headline": "Our Values",
+      "privacy": {
+        "title": "Privacy First",
+        "description": "Your reading habits are personal. We never sell your data or track you across the web."
+      },
+      "openSource": {
+        "title": "Open Source",
+        "description": "We believe in transparency. Our core algorithms are open source and community-driven."
+      },
+      "userFocused": {
+        "title": "User Focused",
+        "description": "Every feature we build starts with a real user problem. We listen, we learn, we iterate."
+      },
+      "quality": {
+        "title": "Quality Over Quantity",
+        "description": "We'd rather help you read 10 great articles than save 100 you'll never open."
+      }
+    },
+    "contact": {
+      "headline": "Get in touch",
+      "description": "Have questions, feedback, or just want to say hi? We'd love to hear from you.",
+      "email": "Email us",
+      "twitter": "Twitter",
+      "github": "GitHub"
+    },
+    "cta": {
+      "headline": "Ready to read smarter?",
+      "button": "Get started for free"
+    }
+  },
+  "dashboard": {
+    "smartQueue": "Smart Queue",
+    "aiPrioritized": "AI-prioritized based on your goal:",
+    "queueHealth": "Queue Health",
+    "readyToRead": "Ready to read",
+    "today": "Today",
+    "estimatedReadTime": "Estimated read time",
+    "addLink": "Add Link",
+    "search": "Search your library...",
+    "archive": {
+      "title": "Archive",
+      "subtitle": "Articles you've read or archived",
+      "tabRead": "Read",
+      "tabArchived": "Archived",
+      "emptyRead": "No read articles yet",
+      "emptyArchived": "No archived articles yet",
+      "emptyReadDescription": "Mark articles as read when you finish them.",
+      "emptyArchivedDescription": "Archive articles you want to save for later reference."
+    },
+    "emptyState": {
+      "title": "Your stack is empty",
+      "subtitle": "Stack your first article above to get started",
+      "aiPowered": "AI-Powered",
+      "aiPoweredDescription": "Get smart relevance scores",
+      "organize": "Organize",
+      "organizeDescription": "Read, archive, and filter",
+      "trackProgress": "Track Progress",
+      "trackProgressDescription": "Monitor reading habits"
+    },
+    "addModal": {
+      "title": "Add to Queue",
+      "placeholder": "Paste article URL...",
+      "button": "Add to Queue"
+    },
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "read": "Read",
+      "archived": "Archived",
+      "quickRead": "Quick Read"
+    },
+    "sort": {
+      "priority": "Priority",
+      "newest": "Newest",
+      "shortest": "Shortest"
+    },
+    "article": {
+      "markAsRead": "Mark as Read",
+      "added": "Added",
+      "ago": {
+        "minutes": "m ago",
+        "hours": "h ago",
+        "days": "d ago"
+      }
+    },
+    "score": {
+      "topMatch": "Top Match",
+      "high": "High",
+      "strong": "Strong",
+      "relevant": "Relevant"
+    },
+    "optimistic": {
+      "analyzing": "Analyzing",
+      "duplicate": "Duplicate",
+      "error": "Error",
+      "alreadyInCollection": "Already in your collection",
+      "failedToSave": "Failed to save"
+    },
+    "focusTimer": {
+      "title": "Focus Time"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Customize your reading preferences for better AI recommendations",
+    "howAiWorks": {
+      "title": "How AI uses your preferences",
+      "goals": "Goals - Ranked goals boost article scores. #1 goal = +20% relevance.",
+      "interests": "Interests - Articles matching your interests get prioritized in your queue.",
+      "speed": "Reading Speed - Used to calculate accurate estimated reading times."
+    },
+    "readingGoals": {
+      "title": "Reading Goals",
+      "description": "Drag to reorder your goals. The AI will prioritize articles matching your top goals.",
+      "tip": "Tip: Your #1 goal gets a +20% relevance boost for matching articles.",
+      "defaultGoals": {
+        "tech": {
+          "title": "Learn new technologies",
+          "description": "Stay up to date with latest tech"
+        },
+        "coding": {
+          "title": "Improve coding skills",
+          "description": "Best practices and patterns"
+        },
+        "career": {
+          "title": "Career growth",
+          "description": "Leadership and professional development"
+        }
+      },
+      "modifiers": {
+        "first": "+20%",
+        "second": "+10%",
+        "baseline": "Baseline"
+      }
+    },
+    "interests": {
+      "title": "Interests",
+      "description": "Add topics you're interested in. Articles matching these get higher scores.",
+      "placeholder": "Add an interest...",
+      "suggestedLabel": "Suggested topics:",
+      "suggested": {
+        "technology": "Technology",
+        "aiMl": "AI & Machine Learning",
+        "webDev": "Web Development",
+        "design": "Design",
+        "business": "Business",
+        "science": "Science",
+        "health": "Health",
+        "finance": "Finance",
+        "productivity": "Productivity",
+        "career": "Career"
+      }
+    },
+    "readingSpeed": {
+      "title": "Reading Speed",
+      "description": "Your reading speed helps calculate accurate time estimates.",
+      "unit": "words per minute",
+      "hint": "Average reading speed is 250 WPM. Fast readers: 400+ WPM."
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Choose your preferred color scheme.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "success": "Profile updated successfully!",
+    "saveChanges": "Save Changes"
+  },
+  "sidebar": {
+    "version": "Smart Queue v2.0",
+    "proMember": "Pro Member"
+  },
+  "errors": {
+    "invalidUrl": "Please enter a valid URL",
+    "urlProtocol": "URL must start with http:// or https://",
+    "notSignedIn": "You must be signed in to stack articles",
+    "invalidUrlFormat": "Invalid URL",
+    "alreadyInStack": "This article is already in your stack",
+    "failedToCreateUser": "Failed to create or find user account. Please try again.",
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "unauthorized": "Unauthorized",
+    "userNotFound": "User not found",
+    "articleNotFound": "Article not found",
+    "failedToMarkRead": "Failed to mark article as read",
+    "failedToMarkUnread": "Failed to mark article as unread",
+    "failedToArchive": "Failed to archive article",
+    "failedToUnarchive": "Failed to unarchive article",
+    "goalsMaxLength": "Goals must be 500 characters or less",
+    "invalidInput": "Invalid input",
+    "failedToUpdateProfile": "Failed to update profile. Please try again."
+  },
+  "languageSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "pt-BR": "Portuguese (Brazil)"
+  }
+}
