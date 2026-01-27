@@ -1,4 +1,7 @@
+'use client';
+
 import * as React from "react"
+import { useTranslations } from "next-intl"
 import { cn } from "@/lib/utils"
 
 interface ScoreBadgeProps {
@@ -12,13 +15,13 @@ interface ScoreBadgeProps {
 }
 
 /**
- * Get priority label based on score
+ * Get priority label key based on score
  */
-export function getPriorityLabel(score: number): { label: string; colorClass: string } {
-  if (score >= 95) return { label: "Top Match", colorClass: "text-primary bg-blue-50" }
-  if (score >= 85) return { label: "High", colorClass: "text-slate-600" }
-  if (score >= 70) return { label: "Strong", colorClass: "text-slate-600" }
-  return { label: "Relevant", colorClass: "text-slate-600" }
+export function getPriorityLabelKey(score: number): { labelKey: 'topMatch' | 'high' | 'strong' | 'relevant'; colorClass: string } {
+  if (score >= 95) return { labelKey: "topMatch", colorClass: "text-primary bg-blue-50" }
+  if (score >= 85) return { labelKey: "high", colorClass: "text-slate-600" }
+  if (score >= 70) return { labelKey: "strong", colorClass: "text-slate-600" }
+  return { labelKey: "relevant", colorClass: "text-slate-600" }
 }
 
 /**
@@ -68,6 +71,9 @@ function ScoreBadge({
   colorClass,
   className,
 }: ScoreBadgeProps) {
+  const t = useTranslations('dashboard.score')
+  const tCommon = useTranslations('common')
+
   const isHighScore = score >= 90
   const normalizedScore = Math.round((score / maxScore) * 100)
   const shouldHighlight = variant === "highlight" || (variant === undefined && isHighScore)
@@ -75,7 +81,7 @@ function ScoreBadge({
   // Circular variant with SVG ring
   if (variant === "circular") {
     const ringColor = colorClass || getRingColorClass(normalizedScore)
-    const { label } = getPriorityLabel(normalizedScore)
+    const { labelKey } = getPriorityLabelKey(normalizedScore)
 
     return (
       <div className={cn("flex flex-col items-center text-center", className)}>
@@ -108,7 +114,7 @@ function ScoreBadge({
             "text-[10px] mt-1 font-bold",
             normalizedScore >= 95 ? "text-primary bg-blue-50 px-1.5 py-0.5 rounded" : "text-slate-500"
           )}>
-            {label}
+            {t(labelKey)}
           </span>
         )}
       </div>
@@ -135,7 +141,7 @@ function ScoreBadge({
     >
       {showLabel && (
         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
-          Score
+          {tCommon('score')}
         </span>
       )}
       <span className={cn(
