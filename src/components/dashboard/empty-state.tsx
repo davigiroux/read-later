@@ -1,9 +1,14 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { BookOpen, Sparkles, TrendingUp } from 'lucide-react';
 
 /**
  * Empty state component shown when user has no saved articles
  */
 export function EmptyState() {
+  const t = useTranslations('dashboard.emptyState');
+
   return (
     <div className="flex flex-col items-center justify-center py-20 px-4 text-center animate-[fade-in_0.6s_ease-out]">
       {/* Icon with gradient background */}
@@ -16,10 +21,10 @@ export function EmptyState() {
 
       {/* Main message */}
       <h3 className="text-2xl font-semibold mb-3 max-w-md">
-        Your stack is empty
+        {t('title')}
       </h3>
       <p className="text-muted-foreground text-lg max-w-md mb-8 leading-relaxed">
-        Stack your first article above to get started
+        {t('subtitle')}
       </p>
 
       {/* Helpful suggestions */}
@@ -29,8 +34,8 @@ export function EmptyState() {
             <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium mb-1">AI-Powered</p>
-            <p className="text-xs text-muted-foreground">Get smart relevance scores</p>
+            <p className="text-sm font-medium mb-1">{t('aiPowered')}</p>
+            <p className="text-xs text-muted-foreground">{t('aiPoweredDescription')}</p>
           </div>
         </div>
 
@@ -39,8 +44,8 @@ export function EmptyState() {
             <BookOpen className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium mb-1">Organize</p>
-            <p className="text-xs text-muted-foreground">Read, archive, and filter</p>
+            <p className="text-sm font-medium mb-1">{t('organize')}</p>
+            <p className="text-xs text-muted-foreground">{t('organizeDescription')}</p>
           </div>
         </div>
 
@@ -49,8 +54,8 @@ export function EmptyState() {
             <TrendingUp className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium mb-1">Track Progress</p>
-            <p className="text-xs text-muted-foreground">Monitor reading habits</p>
+            <p className="text-sm font-medium mb-1">{t('trackProgress')}</p>
+            <p className="text-xs text-muted-foreground">{t('trackProgressDescription')}</p>
           </div>
         </div>
       </div>

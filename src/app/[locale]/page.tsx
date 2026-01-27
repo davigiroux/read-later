@@ -1,31 +1,11 @@
-import Link from 'next/link';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Bookmark, Sparkles, Target, ArrowRight, Check, Plus, Clock, ChevronRight } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { MarketingFooter } from '@/components/marketing/footer';
 import { Logo } from '@/components/ui/logo';
-
-const journeySteps = [
-  {
-    step: 1,
-    icon: Bookmark,
-    title: 'Save Anything',
-    description: 'Articles, videos, threads — save from anywhere with one click.',
-  },
-  {
-    step: 2,
-    icon: Sparkles,
-    title: 'AI Does the Work',
-    description: 'AI scores relevance based on your goals and interests.',
-  },
-  {
-    step: 3,
-    icon: Target,
-    title: 'Read What Matters',
-    description: 'Focus on high-impact content first. No more decision fatigue.',
-  },
-];
 
 // Mock avatar URLs for social proof
 const avatars = [
@@ -34,12 +14,43 @@ const avatars = [
   'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop&crop=face',
 ];
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   const { userId } = await auth();
 
   if (userId) {
     redirect('/dashboard');
   }
+
+  const t = await getTranslations('home');
+  const tCommon = await getTranslations('common');
+
+  const journeySteps = [
+    {
+      step: 1,
+      icon: Bookmark,
+      title: t('step1Title'),
+      description: t('step1Description'),
+    },
+    {
+      step: 2,
+      icon: Sparkles,
+      title: t('step2Title'),
+      description: t('step2Description'),
+    },
+    {
+      step: 3,
+      icon: Target,
+      title: t('step3Title'),
+      description: t('step3Description'),
+    },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
@@ -53,10 +64,10 @@ export default async function Home() {
           <Logo size="md" />
           <div className="flex items-center gap-3">
             <Button asChild variant="ghost" size="sm">
-              <Link href="/sign-in">Sign In</Link>
+              <Link href="/sign-in">{tCommon('signIn')}</Link>
             </Button>
             <Button asChild variant="primary-blue" size="sm">
-              <Link href="/dashboard">Get Started</Link>
+              <Link href="/dashboard">{tCommon('getStarted')}</Link>
             </Button>
           </div>
         </div>
@@ -71,33 +82,32 @@ export default async function Home() {
               {/* Animated badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide uppercase border border-blue-200 dark:border-blue-800">
                 <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                AI-Powered Curation v2.0
+                {t('badge')}
               </div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight">
-                Stop hoarding links.
-                <br />
-                <span className="gradient-text">Start reading</span>
-                <br />
-                what matters.
+                {t.rich('headline', {
+                  br: () => <br />,
+                  gradient: (chunks) => <span className="gradient-text">{chunks}</span>,
+                })}
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Your &ldquo;Save for Later&rdquo; list is a graveyard of good intentions. LaterStack is an AI engine that filters the noise, scores relevance based on your goals, and tells you exactly what to read next.
+                {t('subheadline')}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button asChild variant="primary-blue" size="lg" className="text-base gap-2 group">
                   <Link href="/dashboard">
-                    Try the MVP for Free
+                    {t('ctaPrimary')}
                     <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-base gap-2">
-                  <Link href="#features">
-                    See how it works
+                  <a href="#features">
+                    {t('ctaSecondary')}
                     <ArrowRight className="size-4 text-muted-foreground" />
-                  </Link>
+                  </a>
                 </Button>
               </div>
 
@@ -113,7 +123,7 @@ export default async function Home() {
                     />
                   ))}
                 </div>
-                <p>Early adopters welcome</p>
+                <p>{t('earlyAdopters')}</p>
               </div>
             </div>
 
@@ -140,14 +150,14 @@ export default async function Home() {
                   {/* Queue header */}
                   <div className="flex justify-between items-center mb-8">
                     <div>
-                      <h3 className="text-xl font-bold font-display">Your Smart Queue</h3>
+                      <h3 className="text-xl font-bold font-display">{t('mockQueue.title')}</h3>
                       <p className="text-sm text-muted-foreground">
-                        Sorted by <span className="text-primary font-medium">Relevance & Impact</span>
+                        {t('mockQueue.subtitle')}
                       </p>
                     </div>
                     <div className="text-center px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <div className="text-xs text-muted-foreground mb-0.5">Focus Time</div>
-                      <div className="font-bold text-primary">45m left</div>
+                      <div className="text-xs text-muted-foreground mb-0.5">{t('mockQueue.focusTime')}</div>
+                      <div className="font-bold text-primary">{t('mockQueue.timeLeft', { time: '45m' })}</div>
                     </div>
                   </div>
 
@@ -160,10 +170,10 @@ export default async function Home() {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded">
-                              High Impact
+                              {t('mockQueue.highImpact')}
                             </span>
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="size-3" /> 8 min read
+                              <Clock className="size-3" /> 8 {tCommon('minRead')}
                             </span>
                           </div>
                           <h4 className="font-semibold leading-snug mb-1">
@@ -174,7 +184,7 @@ export default async function Home() {
                           </p>
                         </div>
                         <div className="flex flex-col items-center justify-center bg-background border rounded-lg p-2 w-12 h-12 shadow-sm">
-                          <span className="text-xs font-bold text-muted-foreground">Score</span>
+                          <span className="text-xs font-bold text-muted-foreground">{tCommon('score')}</span>
                           <span className="text-sm font-bold text-primary">98</span>
                         </div>
                       </div>
@@ -186,10 +196,10 @@ export default async function Home() {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="bg-muted text-muted-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded">
-                              Career
+                              {t('topics.career')}
                             </span>
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="size-3" /> 12 min read
+                              <Clock className="size-3" /> 12 {tCommon('minRead')}
                             </span>
                           </div>
                           <h4 className="font-semibold leading-snug mb-1">
@@ -200,7 +210,7 @@ export default async function Home() {
                           </p>
                         </div>
                         <div className="flex flex-col items-center justify-center bg-muted/50 border rounded-lg p-2 w-12 h-12">
-                          <span className="text-xs font-bold text-muted-foreground">Score</span>
+                          <span className="text-xs font-bold text-muted-foreground">{tCommon('score')}</span>
                           <span className="text-sm font-bold text-muted-foreground">85</span>
                         </div>
                       </div>
@@ -212,10 +222,10 @@ export default async function Home() {
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="bg-muted text-muted-foreground text-[10px] uppercase font-bold px-2 py-0.5 rounded">
-                              Tech
+                              {t('topics.tech')}
                             </span>
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="size-3" /> 5 min read
+                              <Clock className="size-3" /> 5 {tCommon('minRead')}
                             </span>
                           </div>
                           <h4 className="font-semibold leading-snug mb-1">
@@ -226,7 +236,7 @@ export default async function Home() {
                           </p>
                         </div>
                         <div className="flex flex-col items-center justify-center bg-muted/50 border rounded-lg p-2 w-12 h-12">
-                          <span className="text-xs font-bold text-muted-foreground">Score</span>
+                          <span className="text-xs font-bold text-muted-foreground">{tCommon('score')}</span>
                           <span className="text-sm font-bold text-muted-foreground">72</span>
                         </div>
                       </div>
@@ -251,17 +261,17 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-              How it works
+              {t('howItWorks')}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Three simple steps to finally read what you save.
+              {t('howItWorksSubtitle')}
             </p>
           </div>
 
           {/* Journey Steps */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-4">
             {journeySteps.map((step, index) => (
-              <div key={step.title} className="relative">
+              <div key={step.step} className="relative">
                 {/* Connector arrow (desktop only) */}
                 {index < journeySteps.length - 1 && (
                   <div className="hidden lg:flex absolute top-1/2 -right-4 z-10 text-muted-foreground/50">
@@ -287,7 +297,7 @@ export default async function Home() {
                           <div className="size-6 rounded bg-primary/20 flex items-center justify-center">
                             <Bookmark className="size-3 text-primary" />
                           </div>
-                          <span className="text-xs font-medium">Save to LaterStack</span>
+                          <span className="text-xs font-medium">{t('mockSave.title')}</span>
                         </div>
                         <div className="space-y-2">
                           <div className="h-2 bg-muted rounded w-full" />
@@ -295,10 +305,10 @@ export default async function Home() {
                         </div>
                         <div className="mt-3 flex gap-2">
                           <div className="flex-1 h-7 bg-primary rounded text-[10px] text-primary-foreground font-medium flex items-center justify-center">
-                            Save
+                            {tCommon('save')}
                           </div>
                           <div className="h-7 px-3 border rounded text-[10px] font-medium flex items-center justify-center text-muted-foreground">
-                            Cancel
+                            {tCommon('cancel')}
                           </div>
                         </div>
                       </div>
@@ -308,21 +318,21 @@ export default async function Home() {
                       /* AI mockup - Scoring animation */
                       <div className="p-4">
                         <div className="flex items-center justify-between mb-3">
-                          <div className="text-xs font-medium">Analyzing content...</div>
+                          <div className="text-xs font-medium">{t('mockQueue.analyzing')}</div>
                           <Sparkles className="size-4 text-primary animate-pulse" />
                         </div>
                         <div className="space-y-2">
                           <div className="flex items-center justify-between p-2 rounded-lg bg-background border">
-                            <span className="text-[10px] text-muted-foreground">Relevance</span>
+                            <span className="text-[10px] text-muted-foreground">{t('mockQueue.relevance')}</span>
                             <span className="text-xs font-bold text-primary">98</span>
                           </div>
                           <div className="flex items-center justify-between p-2 rounded-lg bg-background border">
-                            <span className="text-[10px] text-muted-foreground">Goal match</span>
-                            <span className="text-xs font-bold text-green-600">High</span>
+                            <span className="text-[10px] text-muted-foreground">{t('mockQueue.goalMatch')}</span>
+                            <span className="text-xs font-bold text-green-600">{t('mockQueue.high')}</span>
                           </div>
                           <div className="flex items-center justify-between p-2 rounded-lg bg-background border">
-                            <span className="text-[10px] text-muted-foreground">Read time</span>
-                            <span className="text-xs font-bold">8 min</span>
+                            <span className="text-[10px] text-muted-foreground">{t('mockQueue.readTime')}</span>
+                            <span className="text-xs font-bold">8 {tCommon('min')}</span>
                           </div>
                         </div>
                       </div>
@@ -331,7 +341,7 @@ export default async function Home() {
                     {step.step === 3 && (
                       /* Queue mockup - Prioritized list */
                       <div className="p-4">
-                        <div className="text-xs font-medium mb-3">Your Smart Queue</div>
+                        <div className="text-xs font-medium mb-3">{t('mockQueue.title')}</div>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                             <div className="w-1 h-6 bg-primary rounded-full" />
@@ -377,22 +387,22 @@ export default async function Home() {
       <section className="py-24 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
-            Your reading list won&apos;t fix itself.
+            {t('finalCta.headline')}
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Stop saving. Start reading.
+            {t('finalCta.subheadline')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild variant="primary-blue" size="lg" className="text-base gap-2">
               <Link href="/dashboard">
-                Try the MVP for Free
+                {t('ctaPrimary')}
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
           </div>
           <p className="text-sm text-muted-foreground mt-4 flex items-center justify-center gap-2">
             <Check className="size-4 text-green-500" />
-            No credit card required
+            {t('finalCta.noCreditCard')}
           </p>
         </div>
       </section>

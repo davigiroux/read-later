@@ -1,85 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, Space_Grotesk } from "next/font/google";
-import { ClerkProvider } from '@clerk/nextjs';
-import { Analytics } from '@vercel/analytics/next';
-import { OrganizationJsonLd, WebApplicationJsonLd } from '@/components/seo/json-ld';
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
-export const metadata: Metadata = {
-  title: 'LaterStack - Master your reading list with AI',
-  description: 'Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.',
-  keywords: ['reading queue', 'article manager', 'AI recommendations', 'read later', 'productivity', 'smart reading'],
-  authors: [{ name: 'Davi Giroux', url: 'https://devgiroux.com' }],
-  creator: 'Davi Giroux',
-  metadataBase: new URL('https://laterstack.io'),
-
-  openGraph: {
-    title: 'LaterStack - Master your reading list with AI',
-    description: 'Stop drowning in tabs. LaterStack uses advanced AI to rank, summarize, and schedule your reading based on your goals and available time.',
-    url: 'https://laterstack.io',
-    siteName: 'LaterStack',
-    locale: 'en_US',
-    type: 'website',
-  },
-
-  twitter: {
-    card: 'summary_large_image',
-    title: 'LaterStack - Master your reading list with AI',
-    description: 'Stop drowning in tabs. LaterStack uses AI to rank and schedule your reading based on your goals.',
-    creator: '@devgiroux',
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
-  },
-};
-
+// Root layout - all content is rendered under [locale] layout
+// This is a required file for Next.js but the actual layout is in [locale]/layout.tsx
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <OrganizationJsonLd />
-          <WebApplicationJsonLd />
-        </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${spaceGrotesk.variable} antialiased`}
-        >
-          {children}
-          <Analytics />
-        </body>
-      </html>
-    </ClerkProvider>
-  );
+}) {
+  return children;
 }

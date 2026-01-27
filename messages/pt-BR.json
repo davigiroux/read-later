@@ -1,0 +1,373 @@
+{
+  "metadata": {
+    "title": "LaterStack - Domine sua lista de leitura com IA",
+    "description": "Pare de se afogar em abas. O LaterStack usa IA avançada para classificar, resumir e agendar suas leituras com base em seus objetivos e tempo disponível.",
+    "signInTitle": "Entrar | LaterStack",
+    "signInDescription": "Entre na sua conta LaterStack para acessar sua fila de leitura inteligente.",
+    "signUpTitle": "Cadastrar | LaterStack",
+    "signUpDescription": "Crie uma conta gratuita no LaterStack. Priorização de artigos com IA baseada nos seus objetivos."
+  },
+  "common": {
+    "getStarted": "Começar",
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "saving": "Salvando...",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "min": "min",
+    "minRead": "min de leitura",
+    "articles": "artigos",
+    "score": "Pontuação",
+    "allRightsReserved": "Todos os direitos reservados."
+  },
+  "nav": {
+    "features": "Recursos",
+    "pricing": "Preços",
+    "about": "Sobre",
+    "smartQueue": "Fila Inteligente",
+    "archive": "Arquivo",
+    "discover": "Descobrir",
+    "settings": "Configurações",
+    "library": "Biblioteca",
+    "collapse": "Recolher"
+  },
+  "home": {
+    "badge": "Curadoria com IA v2.0",
+    "headline": "Pare de acumular links.<br></br><gradient>Comece a ler</gradient><br></br>o que importa.",
+    "subheadline": "Sua lista de 'Ler Depois' é um cemitério de boas intenções. O LaterStack é um motor de IA que filtra o ruído, pontua relevância com base nos seus objetivos e diz exatamente o que ler em seguida.",
+    "ctaPrimary": "Experimente o MVP Grátis",
+    "ctaSecondary": "Veja como funciona",
+    "earlyAdopters": "Primeiros usuários são bem-vindos",
+    "howItWorks": "Como funciona",
+    "howItWorksSubtitle": "Três passos simples para finalmente ler o que você salva.",
+    "step1Title": "Salve Qualquer Coisa",
+    "step1Description": "Artigos, vídeos, threads — salve de qualquer lugar com um clique.",
+    "step2Title": "A IA Faz o Trabalho",
+    "step2Description": "A IA pontua relevância com base nos seus objetivos e interesses.",
+    "step3Title": "Leia o que Importa",
+    "step3Description": "Foque em conteúdo de alto impacto primeiro. Sem mais fadiga de decisão.",
+    "mockQueue": {
+      "title": "Sua Fila Inteligente",
+      "subtitle": "Ordenada por Relevância e Impacto",
+      "focusTime": "Tempo de Foco",
+      "timeLeft": "{time} restantes",
+      "highImpact": "Alto Impacto",
+      "analyzing": "Analisando conteúdo...",
+      "relevance": "Relevância",
+      "goalMatch": "Compatibilidade",
+      "high": "Alta",
+      "readTime": "Tempo de leitura"
+    },
+    "mockSave": {
+      "title": "Salvar no LaterStack"
+    },
+    "finalCta": {
+      "headline": "Sua lista de leitura não vai se organizar sozinha.",
+      "subheadline": "Pare de salvar. Comece a ler.",
+      "noCreditCard": "Sem necessidade de cartão de crédito"
+    },
+    "topics": {
+      "career": "Carreira",
+      "tech": "Tecnologia"
+    }
+  },
+  "features": {
+    "headline": "Recursos feitos para leitores dedicados",
+    "subheadline": "Tudo o que você precisa para transformar sua experiência de leitura. Economize tempo, leia de forma mais inteligente e nunca perca conteúdo importante.",
+    "aiScoring": {
+      "title": "Pontuação com IA",
+      "description": "Cada artigo recebe uma pontuação de relevância baseada nos seus objetivos, interesses e histórico de leitura. Foque no que mais importa."
+    },
+    "readingTime": {
+      "title": "Estimativas de Tempo de Leitura",
+      "description": "Saiba exatamente quanto tempo cada artigo leva. Planeje suas sessões de leitura e aproveite ao máximo seu tempo disponível."
+    },
+    "personalGoals": {
+      "title": "Objetivos Pessoais",
+      "description": "Defina seus objetivos de leitura e veja a IA priorizar conteúdo que ajuda você a alcançá-los."
+    },
+    "smartRecommendations": {
+      "title": "Recomendações Inteligentes",
+      "description": "Quanto mais você lê, mais inteligente ela fica. Descubra novos conteúdos que combinam com seus interesses em evolução."
+    },
+    "quickSave": {
+      "title": "Salvamento Rápido",
+      "description": "Salve artigos instantaneamente de qualquer navegador com nossa extensão. Um clique e está na sua fila."
+    },
+    "privacyFirst": {
+      "title": "Privacidade em Primeiro Lugar",
+      "description": "Seus hábitos de leitura são privados. Não vendemos seus dados nem rastreamos você pela web."
+    },
+    "analytics": {
+      "title": "Análises de Leitura",
+      "description": "Acompanhe seu progresso de leitura ao longo do tempo. Veja suas sequências, taxas de conclusão e tendências de leitura."
+    },
+    "organize": {
+      "title": "Organize Tudo",
+      "description": "Arquive artigos lidos, crie coleções e mantenha sua lista de leitura limpa e organizada."
+    },
+    "cta": {
+      "headline": "Pronto para começar?",
+      "button": "Experimente o LaterStack grátis"
+    }
+  },
+  "pricing": {
+    "headline": "Preços simples e transparentes",
+    "subheadline": "Comece gratuitamente, atualize quando precisar de mais. Sem taxas ocultas, sem surpresas.",
+    "mostPopular": "Mais Popular",
+    "free": {
+      "name": "Gratuito",
+      "description": "Perfeito para começar",
+      "features": {
+        "articles": "Salve até 50 artigos",
+        "scoring": "Pontuação básica com IA",
+        "readingTime": "Estimativas de tempo de leitura",
+        "extension": "Extensão para navegador"
+      },
+      "cta": "Começar"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "R$45",
+      "period": "/mês",
+      "description": "Para leitores dedicados",
+      "features": {
+        "articles": "Artigos ilimitados",
+        "aiCuration": "Curadoria avançada com IA",
+        "goals": "Objetivos e interesses pessoais",
+        "analytics": "Análises de leitura",
+        "support": "Suporte prioritário",
+        "api": "Acesso à API"
+      },
+      "cta": "Iniciar Teste Pro"
+    },
+    "team": {
+      "name": "Equipe",
+      "price": "R$145",
+      "period": "/mês",
+      "description": "Para equipes e organizações",
+      "features": {
+        "everything": "Tudo do Pro",
+        "members": "Até 10 membros da equipe",
+        "collections": "Coleções compartilhadas",
+        "teamAnalytics": "Análises da equipe",
+        "admin": "Controles de administrador",
+        "sso": "Integração SSO"
+      },
+      "cta": "Falar com Vendas"
+    },
+    "help": {
+      "headline": "Dúvidas? Estamos aqui para ajudar.",
+      "cta": "Fale conosco"
+    }
+  },
+  "about": {
+    "headline": "Sobre o LaterStack",
+    "subheadline": "Feito por leitores, para leitores.",
+    "story": {
+      "p1": "Começamos o LaterStack porque estávamos nos afogando em nossas próprias listas de leitura. Centenas de artigos salvos, mas nunca tempo suficiente para lê-los. Parece familiar?",
+      "p2": "O problema não era salvar artigos — era decidir o que ler. Cada link salvo parecia igualmente importante, e a lista só crescia. Precisávamos de uma forma mais inteligente de priorizar.",
+      "p3": "Por isso construímos o LaterStack. Uma IA que entende seus objetivos e interesses, pontua cada artigo por relevância e diz exatamente o que ler em seguida. Sem mais fadiga de decisão. Apenas leitura focada."
+    },
+    "values": {
+      "headline": "Nossos Valores",
+      "privacy": {
+        "title": "Privacidade em Primeiro Lugar",
+        "description": "Seus hábitos de leitura são pessoais. Nunca vendemos seus dados nem rastreamos você pela web."
+      },
+      "openSource": {
+        "title": "Código Aberto",
+        "description": "Acreditamos em transparência. Nossos algoritmos principais são de código aberto e impulsionados pela comunidade."
+      },
+      "userFocused": {
+        "title": "Foco no Usuário",
+        "description": "Cada recurso que construímos começa com um problema real do usuário. Ouvimos, aprendemos, iteramos."
+      },
+      "quality": {
+        "title": "Qualidade Acima de Quantidade",
+        "description": "Preferimos ajudá-lo a ler 10 artigos excelentes do que salvar 100 que você nunca vai abrir."
+      }
+    },
+    "contact": {
+      "headline": "Entre em contato",
+      "description": "Tem perguntas, feedback ou apenas quer dizer oi? Adoraríamos ouvir você.",
+      "email": "Envie um email",
+      "twitter": "Twitter",
+      "github": "GitHub"
+    },
+    "cta": {
+      "headline": "Pronto para ler de forma mais inteligente?",
+      "button": "Comece gratuitamente"
+    }
+  },
+  "dashboard": {
+    "smartQueue": "Fila Inteligente",
+    "aiPrioritized": "Priorizado por IA com base no seu objetivo:",
+    "queueHealth": "Saúde da Fila",
+    "readyToRead": "Prontos para ler",
+    "today": "Hoje",
+    "estimatedReadTime": "Tempo estimado de leitura",
+    "addLink": "Adicionar Link",
+    "search": "Pesquisar na sua biblioteca...",
+    "archive": {
+      "title": "Arquivo",
+      "subtitle": "Artigos que você leu ou arquivou",
+      "tabRead": "Lidos",
+      "tabArchived": "Arquivados",
+      "emptyRead": "Nenhum artigo lido ainda",
+      "emptyArchived": "Nenhum artigo arquivado ainda",
+      "emptyReadDescription": "Marque artigos como lidos quando terminar.",
+      "emptyArchivedDescription": "Arquive artigos que você quer guardar para referência futura."
+    },
+    "emptyState": {
+      "title": "Sua pilha está vazia",
+      "subtitle": "Adicione seu primeiro artigo acima para começar",
+      "aiPowered": "Com IA",
+      "aiPoweredDescription": "Obtenha pontuações de relevância inteligentes",
+      "organize": "Organize",
+      "organizeDescription": "Leia, arquive e filtre",
+      "trackProgress": "Acompanhe",
+      "trackProgressDescription": "Monitore hábitos de leitura"
+    },
+    "addModal": {
+      "title": "Adicionar à Fila",
+      "placeholder": "Cole a URL do artigo...",
+      "button": "Adicionar à Fila"
+    },
+    "filters": {
+      "all": "Todos",
+      "unread": "Não Lidos",
+      "read": "Lidos",
+      "archived": "Arquivados",
+      "quickRead": "Leitura Rápida"
+    },
+    "sort": {
+      "priority": "Prioridade",
+      "newest": "Mais Recentes",
+      "shortest": "Mais Curtos"
+    },
+    "article": {
+      "markAsRead": "Marcar como Lido",
+      "added": "Adicionado",
+      "ago": {
+        "minutes": "min atrás",
+        "hours": "h atrás",
+        "days": "d atrás"
+      }
+    },
+    "score": {
+      "topMatch": "Melhor Match",
+      "high": "Alto",
+      "strong": "Forte",
+      "relevant": "Relevante"
+    },
+    "optimistic": {
+      "analyzing": "Analisando",
+      "duplicate": "Duplicado",
+      "error": "Erro",
+      "alreadyInCollection": "Já está na sua coleção",
+      "failedToSave": "Falha ao salvar"
+    },
+    "focusTimer": {
+      "title": "Tempo de Foco"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Personalize suas preferências de leitura para melhores recomendações da IA",
+    "howAiWorks": {
+      "title": "Como a IA usa suas preferências",
+      "goals": "Objetivos - Objetivos classificados aumentam pontuações dos artigos. Objetivo #1 = +20% de relevância.",
+      "interests": "Interesses - Artigos que combinam com seus interesses são priorizados na sua fila.",
+      "speed": "Velocidade de Leitura - Usada para calcular tempos estimados de leitura precisos."
+    },
+    "readingGoals": {
+      "title": "Objetivos de Leitura",
+      "description": "Arraste para reordenar seus objetivos. A IA priorizará artigos que combinam com seus principais objetivos.",
+      "tip": "Dica: Seu objetivo #1 recebe +20% de aumento de relevância para artigos correspondentes.",
+      "defaultGoals": {
+        "tech": {
+          "title": "Aprender novas tecnologias",
+          "description": "Manter-se atualizado com as últimas tecnologias"
+        },
+        "coding": {
+          "title": "Melhorar habilidades de programação",
+          "description": "Melhores práticas e padrões"
+        },
+        "career": {
+          "title": "Crescimento na carreira",
+          "description": "Liderança e desenvolvimento profissional"
+        }
+      },
+      "modifiers": {
+        "first": "+20%",
+        "second": "+10%",
+        "baseline": "Base"
+      }
+    },
+    "interests": {
+      "title": "Interesses",
+      "description": "Adicione tópicos de seu interesse. Artigos correspondentes recebem pontuações mais altas.",
+      "placeholder": "Adicionar um interesse...",
+      "suggestedLabel": "Tópicos sugeridos:",
+      "suggested": {
+        "technology": "Tecnologia",
+        "aiMl": "IA e Machine Learning",
+        "webDev": "Desenvolvimento Web",
+        "design": "Design",
+        "business": "Negócios",
+        "science": "Ciência",
+        "health": "Saúde",
+        "finance": "Finanças",
+        "productivity": "Produtividade",
+        "career": "Carreira"
+      }
+    },
+    "readingSpeed": {
+      "title": "Velocidade de Leitura",
+      "description": "Sua velocidade de leitura ajuda a calcular estimativas de tempo precisas.",
+      "unit": "palavras por minuto",
+      "hint": "A velocidade média de leitura é 250 PPM. Leitores rápidos: 400+ PPM."
+    },
+    "appearance": {
+      "title": "Aparência",
+      "description": "Escolha seu esquema de cores preferido.",
+      "light": "Claro",
+      "dark": "Escuro",
+      "system": "Sistema"
+    },
+    "success": "Perfil atualizado com sucesso!",
+    "saveChanges": "Salvar Alterações"
+  },
+  "sidebar": {
+    "version": "Fila Inteligente v2.0",
+    "proMember": "Membro Pro"
+  },
+  "errors": {
+    "invalidUrl": "Por favor, insira uma URL válida",
+    "urlProtocol": "A URL deve começar com http:// ou https://",
+    "notSignedIn": "Você precisa estar logado para adicionar artigos",
+    "invalidUrlFormat": "URL inválida",
+    "alreadyInStack": "Este artigo já está na sua pilha",
+    "failedToCreateUser": "Falha ao criar ou encontrar conta de usuário. Por favor, tente novamente.",
+    "somethingWentWrong": "Algo deu errado. Por favor, tente novamente.",
+    "unauthorized": "Não autorizado",
+    "userNotFound": "Usuário não encontrado",
+    "articleNotFound": "Artigo não encontrado",
+    "failedToMarkRead": "Falha ao marcar artigo como lido",
+    "failedToMarkUnread": "Falha ao marcar artigo como não lido",
+    "failedToArchive": "Falha ao arquivar artigo",
+    "failedToUnarchive": "Falha ao desarquivar artigo",
+    "goalsMaxLength": "Os objetivos devem ter no máximo 500 caracteres",
+    "invalidInput": "Entrada inválida",
+    "failedToUpdateProfile": "Falha ao atualizar perfil. Por favor, tente novamente."
+  },
+  "languageSwitcher": {
+    "label": "Idioma",
+    "en": "Inglês",
+    "pt-BR": "Português (Brasil)"
+  }
+}

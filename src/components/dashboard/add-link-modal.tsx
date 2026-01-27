@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import { X, Link } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOptimisticArticles } from '@/contexts/optimistic-articles-context';
@@ -20,6 +21,8 @@ export function AddLinkModal() {
   const [url, setUrl] = useState('');
   const { addOptimisticArticle } = useOptimisticArticles();
   const { isOpen, close } = useAddLinkModal();
+  const t = useTranslations('dashboard.addModal');
+  const tCommon = useTranslations('common');
 
   const urlIsValid = isValidUrl(url);
 
@@ -55,7 +58,7 @@ export function AddLinkModal() {
       <div className="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl animate-[slide-up_0.2s_ease-out]">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-900">Add to Queue</h2>
+          <h2 className="text-lg font-bold text-slate-900">{t('title')}</h2>
           <button
             onClick={close}
             className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
@@ -73,7 +76,7 @@ export function AddLinkModal() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="Paste article URL..."
+              placeholder={t('placeholder')}
               autoFocus
               className={cn(
                 'w-full h-12 pl-12 pr-4 rounded-xl border',
@@ -93,7 +96,7 @@ export function AddLinkModal() {
             onClick={close}
             className="text-slate-600"
           >
-            Cancel
+            {tCommon('cancel')}
           </Button>
           <Button
             onClick={handleSubmit}
@@ -103,7 +106,7 @@ export function AddLinkModal() {
               'shadow-lg shadow-blue-500/20'
             )}
           >
-            Add to Queue
+            {t('button')}
           </Button>
         </div>
       </div>
